@@ -7,6 +7,6 @@ Przy wywoływaniu cmake'a wymagane jest połączenie z internetem, gdyż pobiera
 Po kompilacji tworzone są dwa programy:
 example - pokazuje działanie przykładowego algorytmu
 test - zawiera przykładowe testy jednostkowe.
-Poprawki zasugerwane przez prowadzącego, dotyczące architektury aplikacji oraz stylu programowania nie zostały uwzględnione w tej wersji programu.
+Poprawki zasugerwane przez prowadzącego, dotyczące architektury aplikacji oraz stylu kodowania nie zostały uwzględnione w tej wersji programu, jednakże zostaną uwzględnione w finalnej wersji.
 Pliki niezbędne do kompilacji znajdują się w zdalnym repozytorium:
 https://github.com/MichalKonradSulek/ZPR
