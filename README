@@ -6,7 +6,7 @@ make all
 Przy wywoływaniu cmake'a wymagane jest połączenie z internetem, gdyż pobierana jest biblioteka gtest.
 Po kompilacji tworzone są dwa programy:
 example - pokazuje działanie przykładowego algorytmu
-test - zawiera przykładowe testy jednostrowe.
+test - zawiera przykładowe testy jednostkowe.
 Poprawki zasugerwane przez prowadzącego, dotyczące architektury aplikacji oraz stylu programowania nie zostały uwzględnione w tej wersji programu.
 Pliki niezbędne do kompilacji znajdują się w zdalnym repozytorium:
 https://github.com/MichalKonradSulek/ZPR
