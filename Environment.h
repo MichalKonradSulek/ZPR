@@ -98,6 +98,11 @@ public:
     {
         std::cout << population[0].getDNA() << "\tfitness: " << population[0].getFitness() << '\n'; //TODO dangerous population[0]
     }
+
+    SpecimenType getBest()
+    {
+        return population[0];
+    }
 };
 
 #endif // __ENVIRONMENT__
