@@ -1,0 +1,12 @@
+Obecny projekt składa się z dwóch programów demonstrujących działanie szkieletu aplikacji.
+Do automatyzacji kompilacji wykorzystywany jest cmake.
+W celu kompilacji należy w folderze projektu wywołać komendy:
+cmake .
+make all
+Przy wywoływaniu cmake'a wymagane jest połączenie z internetem, gdyż pobierana jest biblioteka gtest.
+Po kompilacji tworzone są dwa programy:
+example - pokazuje działanie przykładowego algorytmu
+test - zawiera przykładowe testy jednostrowe.
+Poprawki zasugerwane przez prowadzącego, dotyczące architektury aplikacji oraz stylu programowania nie zostały uwzględnione w tej wersji programu.
+Pliki niezbędne do kompilacji znajdują się w zdalnym repozytorium:
+https://github.com/MichalKonradSulek/ZPR

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 2.8.2)
 project(ZPR)
 set(CMAKE_CXX_STANDARD 14)
 
@@ -35,7 +35,7 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
 endif()
 
 # Now simply link against gtest or gtest_main as needed. Eg
-add_executable(ZPR main.cpp)
+add_executable(example main.cpp)
 
-add_executable(TEST test.cpp)
-target_link_libraries(TEST gtest_main)
+add_executable(test test.cpp)
+target_link_libraries(test gtest_main)
