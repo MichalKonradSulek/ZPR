@@ -4,10 +4,12 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <memory>
 
 #include "Member.h"
 #include "Mutation.h"
 #include "Crossover.h"
+
 template <typename SpecimenType,
           typename MutationType = Mutation<typename SpecimenTraits<SpecimenType>::GeneType>,
           typename CrossoverType = Crossover<typename SpecimenTraits<SpecimenType>::GeneContainer> >
@@ -21,15 +23,16 @@ private:
 protected:
     std::vector<SpecimenType> population_;
 
-    MutationType    mutation_;
+    std::unique_ptr<Mutation<GeneType>> mutation_;
     CrossoverType   crossover_;
 
     virtual double fitness(SpecimenType& member) = 0;
     virtual bool   finishCondition() = 0;
 
 public:
-    Environment(int populationSize) : population_(), mutation_(), crossover_(), populationSize_(populationSize)
+    explicit Environment(int populationSize) : population_(), crossover_(), populationSize_(populationSize)
     {
+        mutation_ = std::make_unique<MutationType>();
         setPopulation();
     }
 
@@ -62,8 +65,8 @@ public:
         {
             for (auto&& gene : member.getDNA())
             {
-                if (mutation_.mutationCondition())
-                    mutation_.mutate(std::forward<GeneType>(gene));
+                if (mutation_->mutationCondition())
+                    mutation_->mutate(std::forward<GeneType>(gene));
             }
         }
     }
@@ -100,6 +103,7 @@ public:
 
     SpecimenType getBest()
     {
+        if(population_.size() == 0) return SpecimenType(); //TODO is this correct?
         return population_[0];
     }
 };

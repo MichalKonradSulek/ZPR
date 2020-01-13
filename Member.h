@@ -4,7 +4,7 @@
 #include <vector>
 
 /** \class Specimen
- * Calss template, that simulates single specimen.
+ * Class template, that simulates single specimen.
  */
 template <typename DnaType, typename DnaContainer = std::vector<DnaType>> //TODO what if <int, std::vector<double>>?
 class Specimen
