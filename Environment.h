@@ -16,6 +16,7 @@ template <typename SpecimenType,
 class Environment
 {
     using GeneType = typename SpecimenTraits<SpecimenType>::GeneType;
+    using GeneContainer = typename SpecimenTraits<SpecimenType>::GeneContainer;
 
 private:
     int populationSize_;
@@ -24,21 +25,34 @@ protected:
     std::vector<SpecimenType> population_;
 
     std::unique_ptr<Mutation<GeneType>> mutation_;
-    CrossoverType   crossover_;
+    std::unique_ptr<Crossover<GeneContainer>>  crossover_;
 
     virtual double fitness(SpecimenType& member) = 0;
     virtual bool   finishCondition() = 0;
 
 public:
-    explicit Environment(int populationSize) : population_(), crossover_(), populationSize_(populationSize)
+    explicit Environment(int populationSize) : population_(), populationSize_(populationSize)
     {
         mutation_ = std::make_unique<MutationType>();
+        crossover_ = std::make_unique<CrossoverType>();
         setPopulation();
     }
 
-    void selection()
+    void setMutation(const std::unique_ptr<Mutation<GeneType>> mutation) {
+        mutation_.reset(mutation);
+    }
+
+    void setCrossover(const std::unique_ptr<Crossover<GeneContainer>> crossover) {
+        crossover_.reset(crossover);
+    }
+
+    void evaluate() {
+        for (auto&& member : population_)
+            member.setFitness(fitness(member));
+    }
+
+    void selection(std::vector<SpecimenType>& offspring)
     {
-        std::vector<SpecimenType> offspring;
         offspring.reserve(population_.size());
 
         for (size_t i = 0; i < population_.size(); i++)
@@ -46,22 +60,17 @@ public:
             int choice = rand() % (population_.size() / 10);
             offspring.emplace_back(population_[choice]);
         }
-
-        for (int i = 0; i < offspring.size() - 1; i += 2)
-            crossover_.cross(offspring[i].getDNA(), offspring[i + 1].getDNA());
-
-        population_ = std::move(offspring);
     }
 
-//    void cross()
-//    {
-//        for (int i = 0; i < population_.size() - 1; i += 2)
-//            crossover_.cross(population_[i].getDNA(), population_[i + 1].getDNA());
-//    }
-
-    void mutate()
+    void cross(std::vector<SpecimenType>& offspring)
     {
-        for (auto& member : population_)
+        for (int i = 0; i < offspring.size() - 1; i += 2)
+            crossover_->cross(offspring[i].getDNA(), offspring[i + 1].getDNA());
+    }
+
+    void mutate(std::vector<SpecimenType>& offspring)
+    {
+        for (auto& member : offspring)
         {
             for (auto&& gene : member.getDNA())
             {
@@ -80,19 +89,32 @@ public:
             population_.emplace_back();
     }
 
+    void singleIteration() {
+        evaluate();
+        std::sort(population_.begin(), population_.end(), [](SpecimenType& a, SpecimenType& b){return a.getFitness() > b.getFitness();});
+        std::vector<SpecimenType> offspring;
+        selection(offspring);
+        cross(offspring);
+        mutate(offspring);
+        population_ = std::move(offspring);
+
+        showBest(); //TODO remove this
+    }
+
     void runSimulation()
     {
         while (!finishCondition())
         {
-            for (auto&& member : population_)
-                member.setFitness(fitness(member));
-
-            std::sort(population_.begin(), population_.end(), [](SpecimenType& a, SpecimenType& b){return a.getFitness() > b.getFitness();});
-
-            selection();
-            mutate();
-
-            showBest();
+            singleIteration();
+//            evaluate();
+//            std::sort(population_.begin(), population_.end(), [](SpecimenType& a, SpecimenType& b){return a.getFitness() > b.getFitness();});
+//            std::vector<SpecimenType> offspring;
+//            selection(offspring);
+//            cross(offspring);
+//            mutate(offspring);
+//            population_ = std::move(offspring);
+//
+//            showBest();
         }
     }
 
