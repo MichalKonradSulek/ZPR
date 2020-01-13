@@ -10,7 +10,7 @@ class CharSpecimen : public Specimen<char, std::string>
 public:
     CharSpecimen(const std::string& dna)
     {
-        DNA = dna;
+        dna_ = dna;
     }
 };
 
@@ -37,7 +37,7 @@ class MySpecimen : public Specimen<char, std::string>
 public:
     MySpecimen()
     {
-        DNA=testString;
+        dna_=testString;
     }
 };
 

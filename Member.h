@@ -3,29 +3,32 @@
 
 #include <vector>
 
-template <typename T, typename Container = std::vector<T> > //TODO what if <int, std::vector<double>>?
+/** \class Specimen
+ * Calss template, that simulates single specimen.
+ */
+template <typename DnaType, typename DnaContainer = std::vector<DnaType>> //TODO what if <int, std::vector<double>>?
 class Specimen
 {
     template <typename S>
     friend class SpecimenTraits;
 
-    using GeneType      = T;
-    using GeneContainer = Container;
+    using GeneType      = DnaType;
+    using GeneContainer = DnaContainer;
 
 private:
-    double fitness;
+    double fitness_;
 
 protected:
-    GeneContainer DNA;
+    GeneContainer dna_;
 
 public:
-    Specimen() : fitness(0.0) { }
+    Specimen() : fitness_(0.0) { }
     virtual ~Specimen() { }
 
-    inline GeneContainer& getDNA() { return DNA; }
+    inline GeneContainer& getDNA() { return dna_; }
 
-    inline int  getFitness() const      { return fitness; }
-    inline void setFitness(int fitness) { this->fitness = fitness; }
+    inline int  getFitness() const      { return fitness_; }
+    inline void setFitness(int fitness) { this->fitness_ = fitness; }
 };
 
 template <typename SpecimenType>

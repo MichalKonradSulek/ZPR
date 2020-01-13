@@ -16,8 +16,8 @@ private:
 public:
     MySpecimen2() : generations(0)
     {
-        DNA.resize(str2.size());
-        for (auto& c : DNA)
+        dna_.resize(str2.size());
+        for (auto& c : dna_)
             c = rand() % 96 + 32;
     }
 
@@ -46,7 +46,7 @@ private:
                 result += 10;
         }
 
-        const auto& DNA2 = population[member.getMate()].getDNA();
+        const auto& DNA2 = population_[member.getMate()].getDNA();
         for (int i = 0; i < str2.size(); i++)
         {
             if (DNA2[i] == str2[i])
@@ -60,26 +60,26 @@ private:
 
     inline bool finishCondition() final
     {
-        for (int i = 0; i < population.size() - 1; i += 2)
+        for (int i = 0; i < population_.size() - 1; i += 2)
         {
-            if (population[i].generationsLeft() <= 0)
+            if (population_[i].generationsLeft() <= 0)
             {
-                population[i].setMate(i + 1, 7);
-                population[i + 1].setMate(i, 7);
+                population_[i].setMate(i + 1, 7);
+                population_[i + 1].setMate(i, 7);
             }
         }
 
-        return population[0].getDNA() == str2;
+        return population_[0].getDNA() == str2;
     }
 
     void setPopulation()
     {
         Environment<MySpecimen2>::setPopulation();
 
-        for (int i = 0; i < population.size() - 1; i += 2)
+        for (int i = 0; i < population_.size() - 1; i += 2)
         {
-            population[i].setMate(i + 1, 5);
-            population[i + 1].setMate(i, 5);
+            population_[i].setMate(i + 1, 5);
+            population_[i + 1].setMate(i, 5);
         }
     }
 

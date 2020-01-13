@@ -8,7 +8,6 @@
 #include "Member.h"
 #include "Mutation.h"
 #include "Crossover.h"
-
 template <typename SpecimenType,
           typename MutationType = Mutation<typename SpecimenTraits<SpecimenType>::GeneType>,
           typename CrossoverType = Crossover<typename SpecimenTraits<SpecimenType>::GeneContainer> >
@@ -17,19 +16,19 @@ class Environment
     using GeneType = typename SpecimenTraits<SpecimenType>::GeneType;
 
 private:
-    int populationSize;
+    int populationSize_;
 
 protected:
-    std::vector<SpecimenType> population;
+    std::vector<SpecimenType> population_;
 
-    MutationType    mutation;
-    CrossoverType   crossover;
+    MutationType    mutation_;
+    CrossoverType   crossover_;
 
     virtual double fitness(SpecimenType& member) = 0;
     virtual bool   finishCondition() = 0;
 
 public:
-    Environment(int populationSize) : population(), mutation(), crossover(), populationSize(populationSize)
+    Environment(int populationSize) : population_(), mutation_(), crossover_(), populationSize_(populationSize)
     {
         setPopulation();
     }
@@ -37,55 +36,55 @@ public:
     void selection()
     {
         std::vector<SpecimenType> offspring;
-        offspring.reserve(population.size());
+        offspring.reserve(population_.size());
 
-        for (size_t i = 0; i < population.size(); i++)
+        for (size_t i = 0; i < population_.size(); i++)
         {
-            int choice = rand() % (population.size() / 10);
-            offspring.emplace_back(population[choice]);
+            int choice = rand() % (population_.size() / 10);
+            offspring.emplace_back(population_[choice]);
         }
 
         for (int i = 0; i < offspring.size() - 1; i += 2)
-            crossover.cross(offspring[i].getDNA(), offspring[i + 1].getDNA());
+            crossover_.cross(offspring[i].getDNA(), offspring[i + 1].getDNA());
 
-        population = std::move(offspring);
+        population_ = std::move(offspring);
     }
 
 //    void cross()
 //    {
-//        for (int i = 0; i < population.size() - 1; i += 2)
-//            crossover.cross(population[i].getDNA(), population[i + 1].getDNA());
+//        for (int i = 0; i < population_.size() - 1; i += 2)
+//            crossover_.cross(population_[i].getDNA(), population_[i + 1].getDNA());
 //    }
 
     void mutate()
     {
-        for (auto& member : population)
+        for (auto& member : population_)
         {
             for (auto&& gene : member.getDNA())
             {
-                if (mutation.mutationCondition())
-                    mutation.mutate(std::forward<GeneType>(gene));
+                if (mutation_.mutationCondition())
+                    mutation_.mutate(std::forward<GeneType>(gene));
             }
         }
     }
 
     virtual void setPopulation()
     {
-        population.clear();
-        population.reserve(populationSize);
+        population_.clear();
+        population_.reserve(populationSize_);
 
-        for (int i = 0; i < populationSize; i++)
-            population.emplace_back();
+        for (int i = 0; i < populationSize_; i++)
+            population_.emplace_back();
     }
 
     void runSimulation()
     {
         while (!finishCondition())
         {
-            for (auto&& member : population)
+            for (auto&& member : population_)
                 member.setFitness(fitness(member));
 
-            std::sort(population.begin(), population.end(), [](SpecimenType& a, SpecimenType& b){return a.getFitness() > b.getFitness();});
+            std::sort(population_.begin(), population_.end(), [](SpecimenType& a, SpecimenType& b){return a.getFitness() > b.getFitness();});
 
             selection();
             mutate();
@@ -96,12 +95,12 @@ public:
 
     void showBest()
     {
-        std::cout << population[0].getDNA() << "\tfitness: " << population[0].getFitness() << '\n'; //TODO dangerous population[0]
+        std::cout << population_[0].getDNA() << "\tfitness: " << population_[0].getFitness() << '\n'; //TODO dangerous population_[0]
     }
 
     SpecimenType getBest()
     {
-        return population[0];
+        return population_[0];
     }
 };
 

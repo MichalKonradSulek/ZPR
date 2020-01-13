@@ -12,8 +12,8 @@ class MySpecimen : public Specimen<char, std::string>
 public:
     MySpecimen()
     {
-        DNA.resize(str1.size());
-        for (auto& c : DNA)
+        dna_.resize(str1.size());
+        for (auto& c : dna_)
             c = rand() % 96 + 32;
     }
 };
@@ -53,7 +53,7 @@ private:
 
     inline bool finishCondition() final
     {
-        return population[0].getDNA() == str1;
+        return population_[0].getDNA() == str1;
     }
 
 public:

@@ -8,22 +8,22 @@ template <typename GeneType>
 class Mutation
 {
 private:
-    int mutationRate;
+    int mutationRate_;
 
 public:
-    Mutation() : mutationRate(10) { }
+    Mutation() : mutationRate_(10) { }
 
     virtual bool mutationCondition()
     {
         int chance = rand() % 1000;
-        return chance < mutationRate;
+        return chance < mutationRate_;
     }
 
     virtual void mutate(GeneType&& gene)
     {
     }
 
-    inline void setMutationRate(int mutationRate) { this->mutationRate = mutationRate; }
+    inline void setMutationRate(int mutationRate) { this->mutationRate_ = mutationRate; }
 };
 
 template <>
