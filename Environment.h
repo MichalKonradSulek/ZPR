@@ -20,6 +20,7 @@ class Environment
 
 private:
     int populationSize_;
+    unsigned long nOfIterations_ = 0;
 
 protected:
     std::vector<SpecimenType> population_;
@@ -53,12 +54,11 @@ public:
 
     void selection(std::vector<SpecimenType>& offspring)
     {
-        offspring.reserve(population_.size());
 
         for (size_t i = 0; i < population_.size(); i++)
         {
             int choice = rand() % (population_.size() / 10);
-            offspring.emplace_back(population_[choice]);
+            offspring.at(i) = population_.at(choice);
         }
     }
 
@@ -89,32 +89,36 @@ public:
             population_.emplace_back();
     }
 
-    void singleIteration() {
+    unsigned long getNOfIterations() const
+    {
+        return nOfIterations_;
+    }
+
+    void iteration() {
         evaluate();
         std::sort(population_.begin(), population_.end(), [](SpecimenType& a, SpecimenType& b){return a.getFitness() > b.getFitness();});
-        std::vector<SpecimenType> offspring;
+        std::vector<SpecimenType> offspring(population_.size());
         selection(offspring);
         cross(offspring);
         mutate(offspring);
         population_ = std::move(offspring);
 
+        ++nOfIterations_;
+
         showBest(); //TODO remove this
+    }
+
+    void iteration(unsigned long nOfIterations) {
+        for(unsigned long i = 0; i < nOfIterations; ++i) {
+            iteration();
+        }
     }
 
     void runSimulation()
     {
         while (!finishCondition())
         {
-            singleIteration();
-//            evaluate();
-//            std::sort(population_.begin(), population_.end(), [](SpecimenType& a, SpecimenType& b){return a.getFitness() > b.getFitness();});
-//            std::vector<SpecimenType> offspring;
-//            selection(offspring);
-//            cross(offspring);
-//            mutate(offspring);
-//            population_ = std::move(offspring);
-//
-//            showBest();
+            iteration();
         }
     }
 
