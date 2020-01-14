@@ -124,7 +124,7 @@ public:
 
     void showBest()
     {
-        std::cout << population_[0].getDNA() << "\tfitness: " << population_[0].getFitness() << '\n'; //TODO dangerous population_[0]
+        std::cout << population_[0].getChromosomes() << "\tfitness: " << population_[0].getFitness() << '\n'; //TODO dangerous population_[0]
     }
 
     SpecimenType getBest()

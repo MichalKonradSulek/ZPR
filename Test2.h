@@ -4,6 +4,7 @@
 #include "Member.h"
 #include "Mutation.h"
 #include "Environment.h"
+#include "Miscellaneous.h"
 
 std::string str2 = "It's an another string that I'm trying to evolve!";
 

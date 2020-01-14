@@ -4,21 +4,49 @@
 #include "Member.h"
 #include "Mutation.h"
 #include "Environment.h"
+#include "Miscellaneous.h"
 
 std::string str1 = "This is the string I'm trying to evolve!";
 
-class MySpecimen : public Specimen<char, std::string>
+bool operator== (const std::vector<unsigned char>& vec, const std::string& str) {
+    if(vec.size() != str.size()) return false;
+    for(int i = 0; i < vec.size(); ++i) {
+        if(vec.at(i) != str.at(i)) return false;
+    }
+    return true;
+}
+
+class MySpecimen : public Specimen<bool, unsigned char>
 {
+protected:
+    ChromosomeType chromosomeFromGenes(typename GeneContainer::iterator firstIterator, typename GeneContainer::iterator secondIterator) const override
+    {
+        ChromosomeType result(0);
+        for(auto i = firstIterator; i != secondIterator; ++i) {
+            if(i == dna_.end()); //TODO throw an exception
+            result *= 2;
+            result += *i;
+        }
+        return result + 32;
+    }
 public:
     MySpecimen()
     {
-        dna_.resize(str1.size());
-        for (auto& c : dna_)
-            c = rand() % 96 + 32;
+        dna_.resize(7*str1.size()); //TODO 7!!!
+        int counter = 0;
+        for (auto i = dna_.begin(); i != dna_.end(); ++i) {
+            *i = rand() % 2;
+            if(counter % 7 == 0) {
+                counter = 0;
+                beginsOfChromosomes_.push_back(i);
+            }
+            ++counter;
+        }
+        beginsOfChromosomes_.push_back(dna_.end());
     }
 };
 
-class MyMutation : public Mutation<char>
+class MyMutation : public Mutation<bool>
 {
     int mutationRate = 10;
 
@@ -29,9 +57,9 @@ public:
         return chance < mutationRate;
     }
 
-    void mutate(char&& gene)
+    void mutate(bool&& gene)
     {
-        gene += rand() % 10 - 5; //TODO gene may reach out of range
+        gene = !gene; //TODO gene may reach out of range
     }
 };
 
@@ -41,10 +69,10 @@ private:
     double fitness(MySpecimen& member)
     {
         int result = 0;
-        auto& DNA = member.getDNA();
+        auto fenotype = member.getChromosomes();
         for (int i = 0; i < str1.size(); i++)
         {
-            if (DNA[i] == str1[i])
+            if (fenotype[i] == str1[i])
                 result += 10;
         }
 
@@ -53,7 +81,7 @@ private:
 
     inline bool finishCondition() final
     {
-        return population_[0].getDNA() == str1;
+        return population_[0].getChromosomes() == str1;
     }
 
 public:

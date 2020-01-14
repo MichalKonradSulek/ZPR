@@ -6,29 +6,48 @@
 /** \class Specimen
  * Class template, that simulates single specimen.
  */
-template <typename DnaType, typename DnaContainer = std::vector<DnaType>> //TODO what if <int, std::vector<double>>?
+template <typename GType, typename CType,
+        template <typename T, typename AllocatorG> class GContainer = std::vector,
+        template <typename E, typename AllocatorC> class CContainer = std::vector>
 class Specimen
 {
     template <typename S>
     friend class SpecimenTraits;
 
-    using GeneType      = DnaType;
-    using GeneContainer = DnaContainer;
-
-private:
-    double fitness_;
-
 protected:
-    GeneContainer dna_;
 
+    using GeneType = GType;
+    using ChromosomeType = CType;
+    using GeneContainer = GContainer<GType, std::allocator<GType>>;
+    using ChromosomeContainer = CContainer<CType, std::allocator<CType>>;
+
+    double fitness_;
+    GeneContainer dna_;
+public: //TODO public!
+    std::vector<typename GeneContainer::iterator> beginsOfChromosomes_;
+    virtual ChromosomeType chromosomeFromGenes(typename GeneContainer::iterator begin, typename GeneContainer::iterator end) const = 0;
 public:
     Specimen() : fitness_(0.0) { }
-    virtual ~Specimen() { }
+    virtual ~Specimen() = default;
+    virtual GeneContainer& getDNA() { return dna_; }
+    virtual int  getFitness() const      { return fitness_; }
+    virtual void setFitness(int fitness) { this->fitness_ = fitness; }
+    virtual ChromosomeContainer getChromosomes() const
+    {
+        ChromosomeContainer result;
+        result.reserve(beginsOfChromosomes_.size());
+        auto firstIterator = beginsOfChromosomes_.begin();
+        auto secondIterator = beginsOfChromosomes_.begin();
+        if(beginsOfChromosomes_.empty()) throw "dupa"; //TODO throw an error
+        ++secondIterator;
+        for(; secondIterator != beginsOfChromosomes_.end();) {
+            result.push_back(chromosomeFromGenes(*firstIterator, *secondIterator));
+            ++firstIterator;
+            ++secondIterator;
+        }
+        return result;
+    }
 
-    inline GeneContainer& getDNA() { return dna_; }
-
-    inline int  getFitness() const      { return fitness_; }
-    inline void setFitness(int fitness) { this->fitness_ = fitness; }
 };
 
 template <typename SpecimenType>
