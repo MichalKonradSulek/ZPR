@@ -30,7 +30,6 @@ protected:
     std::unique_ptr<Mutation<GeneType>> mutation_;
     std::unique_ptr<Crossover<GeneContainer>>  crossover_;
 
-    virtual double fitness(SpecimenType& member) = 0;
     virtual bool   finishCondition() = 0;
 
 public:
@@ -52,8 +51,6 @@ public:
     void evaluate(Fitness<Subject>& fitness) {
         std::for_each(population_.begin(), population_.end(),
                 [&fitness, this](Subject& member){member.setFitness(fitness.rateSpecimen(member, population_));});
-//        for (auto&& member : population_)
-//            member.setFitness(fitness(member));
     }
 
     void selection(std::vector<SpecimenType>& offspring)

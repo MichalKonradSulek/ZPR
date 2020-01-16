@@ -52,28 +52,6 @@ public:
 class MyEnvironment2 : public Environment<MySpecimen2>
 {
 private:
-    double fitness(MySpecimen2& member)
-    {
-        int result = 0;
-        const auto& DNA = member.getDNA();
-        for (int i = 0; i < str2.size(); i++)
-        {
-            if (DNA[i] == str2[i])
-                result += 10;
-        }
-
-        const auto& DNA2 = population_[member.getMate()].getDNA();
-        for (int i = 0; i < str2.size(); i++)
-        {
-            if (DNA2[i] == str2[i])
-                result += 10;
-        }
-
-        member.deacreaseGeneration();
-
-        return static_cast<double>(result);
-    }
-
     inline bool finishCondition() final
     {
         for (int i = 0; i < population_.size() - 1; i += 2)

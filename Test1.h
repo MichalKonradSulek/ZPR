@@ -54,19 +54,6 @@ public:
 class MyEnvironment : public Environment<MySpecimen, MyMutation>
 {
 private:
-    double fitness(MySpecimen& member)
-    {
-        int result = 0;
-        const auto& DNA = member.getFenotype();
-        for (int i = 0; i < str1.size(); i++)
-        {
-            if (DNA[i] == str1[i])
-                result += 10;
-        }
-
-        return static_cast<double>(result);
-    }
-
     inline bool finishCondition() final
     {
         return population_[0].getDNA() == str1;
