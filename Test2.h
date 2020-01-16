@@ -7,7 +7,7 @@
 
 std::string str2 = "It's an another string that I'm trying to evolve!";
 
-class MySpecimen2 : public Specimen<char, std::string>
+class MySpecimen2 : public Specimen<char, char, std::string, std::string>
 {
 private:
     int mate; //TODO shouldn't mate be an iterator?

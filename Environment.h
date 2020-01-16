@@ -11,11 +11,11 @@
 #include "Crossover.h"
 
 template <typename SpecimenType,
-          typename MutationType = Mutation<typename SpecimenTraits<SpecimenType>::GeneType>,
+          typename MutationType = Mutation<typename SpecimenTraits<SpecimenType>::Gene>,
           typename CrossoverType = Crossover<typename SpecimenTraits<SpecimenType>::GeneContainer> >
 class Environment
 {
-    using GeneType = typename SpecimenTraits<SpecimenType>::GeneType;
+    using GeneType = typename SpecimenTraits<SpecimenType>::Gene;
     using GeneContainer = typename SpecimenTraits<SpecimenType>::GeneContainer;
 
 private:

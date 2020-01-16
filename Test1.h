@@ -7,7 +7,7 @@
 
 std::string str1 = "This is the string I'm trying to evolve!";
 
-class MySpecimen : public Specimen<char, std::string>
+class MySpecimen : public Specimen<char, char, std::string, std::string>
 {
 public:
     MySpecimen()
@@ -41,7 +41,7 @@ private:
     double fitness(MySpecimen& member)
     {
         int result = 0;
-        auto& DNA = member.getDNA();
+        const auto& DNA = member.getFenotype();
         for (int i = 0; i < str1.size(); i++)
         {
             if (DNA[i] == str1[i])
