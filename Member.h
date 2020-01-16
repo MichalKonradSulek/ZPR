@@ -28,7 +28,7 @@ public:
     virtual ~Specimen() { }
 
     inline GeneContainer& getDNA() { return dna_; }
-    virtual ChromosomeContainer getFenotype () {
+    virtual ChromosomeContainer getFenotype () const {
         return dna_; //TODO do it
     }
 

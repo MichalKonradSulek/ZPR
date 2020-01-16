@@ -12,11 +12,13 @@ int main()
     MyEnvironment  env1(10000);
     MyEnvironment2 env2(10000);
 
-    env1.runSimulation();
+    MyFitness fitness1;
+    env1.runSimulation(fitness1);
 
     std::cout << "\n\n\n";
 
-    env2.runSimulation();
+    MyFitness2 fitness2;
+    env2.runSimulation(fitness2);
 
     return 0;
 }

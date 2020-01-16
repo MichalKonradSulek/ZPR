@@ -18,6 +18,22 @@ public:
     }
 };
 
+class MyFitness : public Fitness<MySpecimen>
+{
+public:
+    double rateSpecimen (const Subject& specimen, const std::vector<Subject>& population) const override
+    {
+        double result = 0;
+        const auto& DNA = specimen.getFenotype();
+        for (int i = 0; i < str1.size(); i++)
+        {
+            if (DNA[i] == str1[i])
+                result += 10;
+        }
+        return result;
+    }
+};
+
 class MyMutation : public Mutation<char>
 {
     int mutationRate = 10;

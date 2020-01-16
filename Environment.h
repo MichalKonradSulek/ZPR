@@ -9,6 +9,7 @@
 #include "Member.h"
 #include "Mutation.h"
 #include "Crossover.h"
+#include "Fitness.h"
 
 template <typename SpecimenType,
           typename MutationType = Mutation<typename SpecimenTraits<SpecimenType>::Gene>,
@@ -17,13 +18,14 @@ class Environment
 {
     using GeneType = typename SpecimenTraits<SpecimenType>::Gene;
     using GeneContainer = typename SpecimenTraits<SpecimenType>::GeneContainer;
+    using Subject   = SpecimenType;
 
 private:
     int populationSize_;
     unsigned long nOfIterations_ = 0;
 
 protected:
-    std::vector<SpecimenType> population_;
+    std::vector<SpecimenType> population_; //TODO this shouldn't be vector
 
     std::unique_ptr<Mutation<GeneType>> mutation_;
     std::unique_ptr<Crossover<GeneContainer>>  crossover_;
@@ -47,9 +49,11 @@ public:
         crossover_.reset(crossover);
     }
 
-    void evaluate() {
-        for (auto&& member : population_)
-            member.setFitness(fitness(member));
+    void evaluate(Fitness<Subject>& fitness) {
+        std::for_each(population_.begin(), population_.end(),
+                [&fitness, this](Subject& member){member.setFitness(fitness.rateSpecimen(member, population_));});
+//        for (auto&& member : population_)
+//            member.setFitness(fitness(member));
     }
 
     void selection(std::vector<SpecimenType>& offspring)
@@ -94,8 +98,8 @@ public:
         return nOfIterations_;
     }
 
-    void iteration() {
-        evaluate();
+    void iteration(Fitness<Subject>& fitness) {
+        evaluate(fitness);
         std::sort(population_.begin(), population_.end(), [](SpecimenType& a, SpecimenType& b){return a.getFitness() > b.getFitness();});
         std::vector<SpecimenType> offspring(population_.size());
         selection(offspring);
@@ -108,17 +112,17 @@ public:
         showBest(); //TODO remove this
     }
 
-    void iteration(unsigned long nOfIterations) {
+    void iteration(Fitness<Subject>& fitness, unsigned long nOfIterations) {
         for(unsigned long i = 0; i < nOfIterations; ++i) {
-            iteration();
+            iteration(fitness);
         }
     }
 
-    void runSimulation()
+    void runSimulation(Fitness<Subject>& fitness)
     {
         while (!finishCondition())
         {
-            iteration();
+            iteration(fitness);
         }
     }
 

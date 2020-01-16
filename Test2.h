@@ -33,6 +33,22 @@ public:
     inline void deacreaseGeneration() { generations--; }
 };
 
+class MyFitness2 : public Fitness<MySpecimen2>
+{
+public:
+    double rateSpecimen (const Subject& specimen, const std::vector<Subject>& population) const override
+    {
+        double result = 0;
+        const auto& DNA = specimen.getFenotype();
+        for (int i = 0; i < str2.size(); i++)
+        {
+            if (DNA[i] == str2[i])
+                result += 10;
+        }
+        return result;
+    }
+};
+
 class MyEnvironment2 : public Environment<MySpecimen2>
 {
 private:
