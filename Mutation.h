@@ -8,14 +8,13 @@ template <typename GeneType>
 class Mutation
 {
 private:
-    int mutationRate_;
-
+    unsigned mutationRate_;
 public:
-    Mutation() : mutationRate_(10) { }
+    explicit Mutation(unsigned mutationRate = 10) : mutationRate_(mutationRate) { }
 
     virtual bool mutationCondition()
     {
-        int chance = rand() % 1000;
+        unsigned chance = rand() % 1000;
         return chance < mutationRate_;
     }
 
@@ -23,7 +22,7 @@ public:
     {
     }
 
-    inline void setMutationRate(int mutationRate) { this->mutationRate_ = mutationRate; }
+    inline void setMutationRate(int mutationRate) { mutationRate_ = mutationRate; }
 };
 
 template <>

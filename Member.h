@@ -13,27 +13,24 @@ class Specimen
     template <typename S>
     friend class SpecimenTraits;
 
+protected:
     using Gene      = DnaType;
     using GeneContainer = DnaContainer;
     using Chromosome    = ChromosomeType;
     using ChromosomeContainer      = FenotypeContainer;
 
-private:
-    double fitness_;
-
-protected:
     GeneContainer dna_;
+    double fitness_;
 public:
     Specimen() : fitness_(0.0) { }
     virtual ~Specimen() { }
-
     inline GeneContainer& getDNA() { return dna_; }
     virtual ChromosomeContainer getFenotype () const {
         return dna_; //TODO do it
     }
 
     inline int  getFitness() const      { return fitness_; }
-    inline void setFitness(int fitness) { this->fitness_ = fitness; }
+    inline void setFitness(int fitness) { fitness_ = fitness; }
 };
 
 template <typename SpecimenType>

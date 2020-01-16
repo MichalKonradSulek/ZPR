@@ -7,6 +7,8 @@
 
 std::string str1 = "This is the string I'm trying to evolve!";
 
+const size_t GENES_PER_CHROMOSOME = 7;
+
 class MySpecimen : public Specimen<char, char, std::string, std::string>
 {
 public:
@@ -15,6 +17,9 @@ public:
         dna_.resize(str1.size());
         for (auto& c : dna_)
             c = rand() % 96 + 32;
+    }
+    ChromosomeContainer getFenotype() const override {
+        return dna_;
     }
 };
 

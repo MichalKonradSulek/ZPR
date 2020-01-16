@@ -10,8 +10,6 @@
 template <typename SpecimenType>
 class Fitness {
 protected:
-//    using Chromosome    = ChromosomeType; //TODO traits?
-//    using ChromosomeContainer      = FenotypeContainer;
     using Subject      = SpecimenType;
 public:
     virtual ~Fitness() = default;
