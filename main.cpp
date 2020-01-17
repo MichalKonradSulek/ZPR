@@ -17,8 +17,8 @@ int main()
 
     std::cout << "\n\n\n";
 
-    MyFitness2 fitness2;
-    env2.runSimulation(fitness2);
+//    MyFitness2 fitness2;
+//    env2.runSimulation(fitness2);
 
     return 0;
 }

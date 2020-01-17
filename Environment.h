@@ -73,10 +73,15 @@ public:
     {
         for (auto& member : offspring)
         {
-            for (auto&& gene : member.getDNA())
+            auto& genotype = member.getDNA();
+            for (size_t i = 0; i < genotype.size(); ++i)
             {
-                if (mutation_->mutationCondition())
-                    mutation_->mutate(std::forward<GeneType>(gene));
+                if (mutation_->mutationCondition()) {
+                    bool gene = genotype.at(i);
+//                    mutation_->mutate(std::forward<bool>(gene)); //TODO remove if not needed
+                    mutation_->mutate(gene); //TODO how to make it better?
+                    genotype.at(i) = gene;
+                }
             }
         }
     }
@@ -125,7 +130,7 @@ public:
 
     void showBest()
     {
-        std::cout << population_[0].getDNA() << "\tfitness: " << population_[0].getFitness() << '\n'; //TODO dangerous population_[0]
+        std::cout << population_[0].getFenotype() << "\tfitness: " << population_[0].getFitness() << '\n'; //TODO dangerous population_[0]
     }
 
     SpecimenType getBest()

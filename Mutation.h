@@ -18,7 +18,7 @@ public:
         return chance < mutationRate_;
     }
 
-    virtual void mutate(GeneType&& gene)
+    virtual void mutate(GeneType& gene)
     {
     }
 
@@ -26,9 +26,15 @@ public:
 };
 
 template <>
-void Mutation<char>::mutate(char&& gene)
+void Mutation<char>::mutate(char& gene)
 {
     gene = rand() % 96 + 32;
+}
+
+template<>
+void Mutation<bool>::mutate(bool& gene)
+{
+    gene = !gene;
 }
 
 #endif // __MUTATION__

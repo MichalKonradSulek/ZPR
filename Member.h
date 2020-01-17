@@ -24,8 +24,8 @@ protected:
 public:
     Specimen() : fitness_(0.0) { }
     virtual ~Specimen() { }
-    inline GeneContainer& getDNA() { return dna_; }
-    virtual ChromosomeContainer getFenotype () const {
+    virtual GeneContainer& getDNA() { return dna_; }
+    virtual ChromosomeContainer getFenotype () const { //TODO maybe R-value
         return dna_; //TODO do it
     }
 
