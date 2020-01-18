@@ -24,52 +24,63 @@
 #include "Crossover.h"
 #include "Fitness.h"
 
-template <typename SpecimenType,
-          typename MutationType = Mutation<SpecimenType::Gene>,
-          typename CrossoverType = Crossover<SpecimenType::Gene> >
+template <typename SpecimenType, typename FitnessFunction>
 class Environment
 {
 public:
-	using size_type = size_t;
+	using size_type		= size_t;
 
-	using Subject		= SpecimenType;
     using Gene			= typename SpecimenType::Gene;
-    using GeneContainer = std::vector<Gene>;
+	using Chromosome	= typename SpecimenType::Chromosome;
+    using Genotype		= std::vector<Gene>;
+    using Fenotype		= std::vector<Chromosome>;
 
 private:
 	size_type population_size_;
-	size_type number_of_iterations_ = 0;
+
+	size_type number_of_iterations_;
 
 protected:
     std::vector<SpecimenType> population_; //TODO this shouldn't be vector	//TODO_2 why?
 
-    std::unique_ptr<Mutation<Gene>> mutation_;
-    std::unique_ptr<Crossover<Gene>>  crossover_;
+    std::unique_ptr<Mutation<Gene>>		mutation_;
+    std::unique_ptr<Crossover<Gene>>	crossover_;
 
-    virtual bool finishCondition() = 0;
+	FitnessFunction fitness_;
+
+	virtual bool finishCondition()
+	{
+		return number_of_iterations_ > 0;
+	}
 
 public:
-    explicit Environment(int populationSize) : population_(), population_size_(populationSize)
+    explicit Environment(int population_size) : population_size_(population_size), number_of_iterations_(0)
     {
         mutation_ = std::make_unique<MutationType>();
         crossover_ = std::make_unique<CrossoverType>();
+
         setPopulation();
     }
 
-    void setMutation(const std::unique_ptr<Mutation<Gene>> mutation) {
-        mutation_.reset(mutation);
+	template <typename MutationType, typename... Args>
+    void setMutation(Args&&... args)
+	{
+        mutation_.reset(std::make_unique<MutationType>(std::forward<Args>(args)...));
     }
 
-    void setCrossover(const std::unique_ptr<Crossover<GeneContainer>> crossover) {
-        crossover_.reset(crossover);
+	template <typename CrossoverType, typename... Args>
+    void setCrossover(Args&& args) 
+	{
+        crossover_.reset(std::make_unique<CrossoverType>(std::forward<Args>(args)...));
     }
 
-    void evaluate(Fitness<Subject>& fitness) {
-        std::for_each(population_.begin(), population_.end(),
-                [&fitness, this](Subject& member){member.setFitness(fitness.rateSpecimen(member, population_));});
+    void evaluate() 
+	{
+		for (auto& member : population)
+			member.setFitness(fitness_(member));
     }
 
-    void selection(std::vector<SpecimenType>& offspring)
+    virtual void selection(std::vector<SpecimenType>& offspring)
     {
         for (size_t i = 0; i < population_.size(); i++)
         {

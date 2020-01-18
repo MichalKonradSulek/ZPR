@@ -21,21 +21,10 @@ template <typename GeneType>
 class Crossover
 {
 public:
-	using GeneContainer = std::vector<GeneType>;
+	using Gene		= GeneType;
+	using Genotype  = std::vector<Gene>;
 
-	Crossover() = default;
-	~Crossover() = default;
-
-    virtual void cross(GeneContainer& a, GeneContainer& b) { };
+    virtual void cross(Genotype& parent1, Genotype& parent2) = 0;
 };
-
-template <>
-void Crossover<char>::cross(std::vector<char>& a, std::vector<char>& b)
-{
-    int crossPoint = rand() % a.size();
-
-    for (size_t i = crossPoint; i < a.size(); i++)
-        std::swap(a[i], b[i]);
-}
 
 #endif // __CROSSOVER__

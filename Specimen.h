@@ -29,27 +29,27 @@ template <typename GeneType, typename ChromosomeType>
 class Specimen
 {
 public:
-    using Gene					= GeneType;
-	using Chromosome			= ChromosomeType;
-    using GeneContainer			= std::vector<Gene>;
-    using ChromosomeContainer	= std::vector<Chromosome>;
+    using Gene			= GeneType;
+	using Chromosome	= ChromosomeType;
+    using Genotype		= std::vector<Gene>;
+    using Fenotype		= std::vector<Chromosome>;
 
 private:
     double fitness_;
 
 protected:
-	GeneContainer dna_;
+	Genotype dna_;
 
 public:
     Specimen() : fitness_(0.0) { }
 	virtual ~Specimen() = default;
 
-    inline GeneContainer& getDNA()		{ return dna_; }
+    inline Genotype& getDNA()		{ return dna_; }
 
     inline int  getFitness() const      { return fitness_; }
     inline void setFitness(int fitness) { fitness_ = fitness; }
 
-	virtual ChromosomeContainer getFenotype() const = 0; // { return dna_; }
+	virtual Fenotype getFenotype() const = 0; // { return dna_; }
 };
 
 #endif // __SPECIMEN__

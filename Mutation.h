@@ -14,44 +14,32 @@
 #define __MUTATION__
 
 #include <cstdlib>
+#include <vector>
 
 template <typename GeneType>
 class Mutation
 {
 public:
-	using Gene = GeneType;
+	using Gene		= GeneType;
+	using Genotype	= std::vector<Gene>;
 
 private:
-    size_t mutation_rate_;
+	int mutation_chance_;
 
 public:
-    explicit Mutation(size_t mutationRate = 10) : mutation_rate_(mutationRate) { }
+    explicit Mutation(int mutation_chance = 10) : mutation_chance_(mutation_chance) { }
 	virtual ~Mutation() = default;
 
     virtual bool mutationCondition()
     {
-        unsigned chance = rand() % 1000;
+        int chance = rand() % 1000;
         return chance < mutation_rate_;
     }
 
-    virtual void mutate(GeneType& gene)
-    {
-    }
+	virtual void mutate(GeneContainer& genes) = 0;
 
-	inline void getMutationRate() const			   { return mutation_rate_ }
-    inline void setMutationRate(int mutation_rate) { mutation_rate_ = mutation_rate; }
+	inline void getMutationChance() const			   { return mutation_chance_ }
+    inline void setMutationChance(int mutation_chance) { mutation_chance_ = mutation_chance; }
 };
-
-template <>
-void Mutation<char>::mutate(char& gene)
-{
-    gene = rand() % 96 + 32;
-}
-
-template<>
-void Mutation<bool>::mutate(bool& gene)
-{
-    gene = !gene;
-}
 
 #endif // __MUTATION__

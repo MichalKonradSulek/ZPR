@@ -58,7 +58,7 @@ public:
             if (DNA[i] == str1[i])
                 result += 10;
             else if (DNA[i] < 32 || DNA[i] > 126)
-                result -= 100;
+                result -= 50;
         }
         return result;
     }

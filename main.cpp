@@ -11,7 +11,7 @@ int main()
 {
     srand(time(nullptr));
 
-    MyEnvironment  env1(5000);
+    MyEnvironment  env1(10000);
     //MyEnvironment2 env2(10000);
 
     MyFitness fitness1;
