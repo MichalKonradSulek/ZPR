@@ -11,6 +11,8 @@ const size_t GENES_PER_CHROMOSOME = 7;
 
 class MySpecimen : public Specimen<bool, char>
 {
+	//using ChromosomeContainer = Specimen<bool, char>::Ch
+
 public:
     MySpecimen()
     {
@@ -19,9 +21,9 @@ public:
             c = rand() % 2;
     }
 
-    ChromosomeContainer getFenotype() const override
+    Fenotype getFenotype() const override
 	{
-        ChromosomeContainer result;
+		Fenotype result;
 		result.reserve(dna_.size());
 
         size_t counter = 0;
@@ -46,37 +48,7 @@ public:
     }
 };
 
-class MyFitness : public Fitness<MySpecimen>
-{
-public:
-    double rateSpecimen (const Subject& specimen, const std::vector<Subject>& population) const override
-    {
-        double result = 0;
-        const auto& DNA = specimen.getFenotype();
-        for (size_t i = 0; i < str1.size(); i++)
-        {
-            if (DNA[i] == str1[i])
-                result += 10;
-            else if (DNA[i] < 32 || DNA[i] > 126)
-                result -= 50;
-        }
-        return result;
-    }
-};
-
-class MyMutation : public Mutation<bool>
-{
-    int mutationRate = 10;
-
-public:
-    inline bool mutationCondition() final
-    {
-        int chance = rand() % 1000;
-        return chance < mutationRate;
-    }
-};
-
-class MyEnvironment : public Environment<MySpecimen, MyMutation>
+class MyEnvironment : public Environment<MySpecimen>
 {
 private:
     inline bool finishCondition() final

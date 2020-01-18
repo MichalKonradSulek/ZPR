@@ -30,16 +30,27 @@ public:
     explicit Mutation(int mutation_chance = 10) : mutation_chance_(mutation_chance) { }
 	virtual ~Mutation() = default;
 
-    virtual bool mutationCondition()
+    virtual bool mutationCondition() const
     {
         int chance = rand() % 1000;
-        return chance < mutation_rate_;
+        return chance < mutation_chance_;
     }
 
-	virtual void mutate(GeneContainer& genes) = 0;
+	virtual void mutate(Genotype& genes) const = 0;
 
 	inline void getMutationChance() const			   { return mutation_chance_ }
     inline void setMutationChance(int mutation_chance) { mutation_chance_ = mutation_chance; }
+};
+
+template <typename GeneType>
+class MultipleMutation : public Mutation<GeneType>
+{
+protected:
+	int max_mutations_;
+
+public:
+	MultipleMutation(int mutation_chance = 10, int max_mutations = 1) : Mutation<GeneType>(mutation_chance), max_mutations_(max_mutations) { }
+	~MultipleMutation() = default;
 };
 
 #endif // __MUTATION__

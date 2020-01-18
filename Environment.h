@@ -20,11 +20,14 @@
 #include <memory>
 
 #include "Specimen.h"
+
 #include "Mutation.h"
 #include "Crossover.h"
-#include "Fitness.h"
+#include "Selection.h"
 
-template <typename SpecimenType, typename FitnessFunction>
+#include "Predefined.h"
+
+template <typename SpecimenType>
 class Environment
 {
 public:
@@ -38,121 +41,101 @@ public:
 private:
 	size_type population_size_;
 
-	size_type number_of_iterations_;
-
 protected:
     std::vector<SpecimenType> population_; //TODO this shouldn't be vector	//TODO_2 why?
 
-    std::unique_ptr<Mutation<Gene>>		mutation_;
-    std::unique_ptr<Crossover<Gene>>	crossover_;
+	std::vector<SpecimenType> mating_pool_;
+	std::vector<SpecimenType> offspring_;
 
-	FitnessFunction fitness_;
+    std::unique_ptr<Mutation<Gene>>				mutation_type_;
+    std::unique_ptr<Crossover<Gene>>			crossover_type_;
+    std::unique_ptr<Selection<SpecimenType>>	selection_type_;
 
 	virtual bool finishCondition()
 	{
-		return number_of_iterations_ > 0;
+		return false;
 	}
 
 public:
-    explicit Environment(int population_size) : population_size_(population_size), number_of_iterations_(0)
+    explicit Environment(int population_size) : population_size_(population_size)
     {
-        mutation_ = std::make_unique<MutationType>();
-        crossover_ = std::make_unique<CrossoverType>();
-
-        setPopulation();
+		mutation_type_		= std::make_unique<SwapGeneMutation<Gene> >();
+		crossover_type_		= std::make_unique<SinglePointCrossover<Gene> >();
+		selection_type_		= std::make_unique<BestFitnessSelection<SpecimenType> >();
     }
 
-	template <typename MutationType, typename... Args>
-    void setMutation(Args&&... args)
+	virtual void setPopulation(size_type population_size)
 	{
-        mutation_.reset(std::make_unique<MutationType>(std::forward<Args>(args)...));
-    }
+		population_.clear();
+		population_.reserve(population_size);
 
-	template <typename CrossoverType, typename... Args>
-    void setCrossover(Args&& args) 
+		for (size_type i = 0; i < population_size; i++)
+			population_.emplace_back();
+	}
+
+	template <typename FitnessFunction>
+    void evaluation(FitnessFunction fitness)
 	{
-        crossover_.reset(std::make_unique<CrossoverType>(std::forward<Args>(args)...));
+		for (auto& member : population_)
+			member.setFitness(fitness(member));
     }
 
-    void evaluate() 
+    virtual void selection()
+    {
+		mating_pool_ = selection_type_->select(population_, population_size_);
+    }
+
+    virtual void crossover()
+    {
+        for (size_t i = 0; i < mating_pool_.size() - 1; i += 2)
+			crossover_type_->cross(mating_pool_[i].getDNA(), mating_pool_[i + 1].getDNA());
+
+		offspring_ = std::move(mating_pool_);
+    }
+
+    virtual void mutation()
+    {
+		for (auto& individual : offspring_)
+			mutation_type_->mutate(individual.getDNA());
+    }
+
+	virtual void reproduction()
 	{
-		for (auto& member : population)
-			member.setFitness(fitness_(member));
-    }
+		population_ = std::move(offspring_);
+	}
 
-    virtual void selection(std::vector<SpecimenType>& offspring)
-    {
-        for (size_t i = 0; i < population_.size(); i++)
-        {
-            int choice = rand() % (population_.size() / 10);
-            offspring.at(i) = population_.at(choice);
-        }
-    }
+	template <typename FitnessFunction>
+    void iteration(FitnessFunction fitness) {
+        evaluation(fitness);
 
-    void cross(std::vector<SpecimenType>& offspring)
-    {
-        for (int i = 0; i < offspring.size() - 1; i += 2)
-            crossover_->cross(offspring[i].getDNA(), offspring[i + 1].getDNA());
-    }
-
-    void mutate(std::vector<SpecimenType>& offspring)
-    {
-        for (auto& member : offspring)
-        {
-            auto& genotype = member.getDNA();
-            for (size_t i = 0; i < genotype.size(); ++i)
-            {
-                if (mutation_->mutationCondition()) {
-                    bool gene = genotype.at(i);
-                    mutation_->mutate(gene); //TODO how to make it better?
-                    genotype.at(i) = gene;
-                }
-            }
-        }
-    }
-
-    virtual void setPopulation()
-    {
-        population_.clear();
-        population_.reserve(population_size_);
-
-        for (size_type i = 0; i < population_size_; i++)
-            population_.emplace_back();
-    }
-
-    size_type getNumberOfIterations() const
-    {
-        return number_of_iterations_;
-    }
-
-    void iteration(Fitness<Subject>& fitness) {
-        evaluate(fitness);
-
+		//	TODO: remove this line, if sorting is needed selection should perform it
         std::sort(population_.begin(), population_.end(), [](SpecimenType& a, SpecimenType& b){return a.getFitness() > b.getFitness();});
         
-		std::vector<SpecimenType> offspring(population_.size());
+		selection();
         
-		selection(offspring);
+		crossover();
+        mutation();
         
-		cross(offspring);
-        mutate(offspring);
-        
-		population_ = std::move(offspring);
-
-        ++number_of_iterations_;
+		reproduction();
 
 		showBest();		//	TODO: remove
     }
 
-    void iteration(Fitness<Subject>& fitness, size_type number_of_iterations) {
-        for(size_t i = 0; i < number_of_iterations; ++i)
-            iteration(fitness);
-    }
-
-    void runSimulation(Fitness<Subject>& fitness)
+	template <typename FitnessFunction>
+    void runSimulation(FitnessFunction fitness, int number_of_iterations = -1)
     {
-        while (!finishCondition())
-            iteration(fitness);
+		setPopulation(population_size_);
+
+		if (number_of_iterations == -1)
+		{
+			while (!finishCondition())
+				iteration(fitness);
+		}
+		else
+		{
+			while (!finishCondition() && --number_of_iterations >= 0)
+				iteration(fitness);
+		}
     }
 
     void showBest()
@@ -166,6 +149,27 @@ public:
 		if (!population_.size())	throw std::exception("Population vector is empty!");
         return population_[0];
     }
+
+	template <typename MutationType, typename... Args>
+	void setMutationType(Args&&... args)
+	{
+		mutation_type_.reset();
+		mutation_type_ = std::make_unique<MutationType>(std::forward<Args>(args)...);
+	}
+
+	template <typename CrossoverType, typename... Args>
+	void setCrossoverType(Args&&... args)
+	{
+		crossover_type_.reset();
+		crossover_type_ = std::make_unique<CrossoverType>(std::forward<Args>(args)...);
+	}
+
+	template <typename SelectionType, typename... Args>
+	void setSelectionType(Args&&... args)
+	{
+		selection_type_.reset();
+		selection_type_ = std::make_unique<SelectionType>(std::forward<Args>(args)...);
+	}
 };
 
 #endif // __ENVIRONMENT__
