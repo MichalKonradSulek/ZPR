@@ -32,13 +32,13 @@ public:
 
     virtual bool mutationCondition() const
     {
-        int chance = rand() % 1000;
+        int chance = rand() % 1000; //TODO that should be from generator
         return chance < mutation_chance_;
     }
 
 	virtual void mutate(Genotype& genes) const = 0;
 
-	inline void getMutationChance() const			   { return mutation_chance_ }
+	inline int getMutationChance() const			   { return mutation_chance_ ;}
     inline void setMutationChance(int mutation_chance) { mutation_chance_ = mutation_chance; }
 };
 
@@ -49,7 +49,7 @@ protected:
 	int max_mutations_;
 
 public:
-	MultipleMutation(int mutation_chance = 10, int max_mutations = 1) : Mutation<GeneType>(mutation_chance), max_mutations_(max_mutations) { }
+	explicit MultipleMutation(int mutation_chance = 10, int max_mutations = 1) : Mutation<GeneType>(mutation_chance), max_mutations_(max_mutations) { }
 	~MultipleMutation() = default;
 };
 

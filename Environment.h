@@ -39,10 +39,10 @@ public:
     using Fenotype		= std::vector<Chromosome>;
 
 private:
-	size_type population_size_;
+	size_type population_size_; //TODO Why private? właściwie po co nam to?
 
 protected:
-    std::vector<SpecimenType> population_; //TODO this shouldn't be vector	//TODO_2 why?
+    std::vector<SpecimenType> population_;
 
 	std::vector<SpecimenType> mating_pool_;
 	std::vector<SpecimenType> offspring_;
@@ -59,7 +59,7 @@ protected:
 public:
     explicit Environment(int population_size) : population_size_(population_size)
     {
-		mutation_type_		= std::make_unique<SwapGeneMutation<Gene> >();
+		mutation_type_		= std::make_unique<SwapGeneMutation<Gene> >(); //TODO dodałbym do argumentów pointery na wszystkie rzeczy z ustawionym domyślnym new ...
 		crossover_type_		= std::make_unique<SinglePointCrossover<Gene> >();
 		selection_type_		= std::make_unique<BestFitnessSelection<SpecimenType> >();
     }
@@ -67,10 +67,7 @@ public:
 	virtual void setPopulation(size_type population_size)
 	{
 		population_.clear();
-		population_.reserve(population_size);
-
-		for (size_type i = 0; i < population_size; i++)
-			population_.emplace_back();
+		population_.assign(population_size, SpecimenType());
 	}
 
 	template <typename FitnessFunction>
@@ -87,7 +84,7 @@ public:
 
     virtual void crossover()
     {
-        for (size_t i = 0; i < mating_pool_.size() - 1; i += 2)
+        for (size_t i = 0; i < mating_pool_.size() - 1; i += 2) //TODO przemycone założenie, że populacja parzysta
 			crossover_type_->cross(mating_pool_[i].getDNA(), mating_pool_[i + 1].getDNA());
 
 		offspring_ = std::move(mating_pool_);
@@ -122,7 +119,7 @@ public:
     }
 
 	template <typename FitnessFunction>
-    void runSimulation(FitnessFunction fitness, int number_of_iterations = -1)
+    void runSimulation(FitnessFunction fitness, int number_of_iterations = -1) //TODO dodałbym bool ignoreFinishCondidtions = false
     {
 		setPopulation(population_size_);
 
@@ -146,7 +143,7 @@ public:
 
     SpecimenType getBest()
     {
-		if (!population_.size())	throw std::exception("Population vector is empty!");
+		if (!population_.size())	throw std::exception("Population vector is empty!"); //TODO implement exceptionsS
         return population_[0];
     }
 

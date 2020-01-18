@@ -17,7 +17,7 @@ public:
     MySpecimen()
     {
         dna_.resize(str1.size() * GENES_PER_CHROMOSOME);
-        for (auto& c : dna_)
+        for (auto&& c : dna_)
             c = rand() % 2;
     }
 

@@ -49,7 +49,7 @@ public:
     inline int  getFitness() const      { return fitness_; }
     inline void setFitness(int fitness) { fitness_ = fitness; }
 
-	virtual Fenotype getFenotype() const = 0; // { return dna_; }
+	virtual Fenotype getFenotype() const = 0; // { return dna_; } //TODO usunąć komentarz
 };
 
 #endif // __SPECIMEN__

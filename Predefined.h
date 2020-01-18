@@ -17,14 +17,14 @@ private:
 	int max_mutations_;
 
 public:
-	FlipBitMutation(int mutation_chance = 10, int max_mutations = 1) : Mutation<bool>(mutation_chance), max_mutations_(max_mutations) { }
-	~FlipBitMutation() = default;
+	explicit FlipBitMutation(int mutation_chance = 10, int max_mutations = 1) : Mutation<bool>(mutation_chance), max_mutations_(max_mutations) { }
+	~FlipBitMutation() override = default;
 
 	void mutate(Genotype& genes) const override
 	{
 		int mutations_occured = 0;
 
-		for (auto&& gene : genes)
+		for (auto&& gene : genes) //TODO częściej mutują geny o mniejszych indeksach
 		{
 			if (mutationCondition())
 				gene = !gene, ++mutations_occured;
@@ -46,14 +46,14 @@ private:
 	int max_mutations_;
 
 public:
-	SwapGeneMutation(int mutation_chance = 10, int max_mutations = 10) : Mutation<GeneType>(mutation_chance), max_mutations_(max_mutations) { }
+	explicit SwapGeneMutation(int mutation_chance = 10, int max_mutations = 10) : Mutation<GeneType>(mutation_chance), max_mutations_(max_mutations) { }
 	~SwapGeneMutation() = default;
 
 	void mutate(Genotype& genes) const override
 	{
 		for (int i = 0; i < max_mutations_; ++i)
 		{
-			size_t a = rand() % genes.size();
+			size_t a = rand() % genes.size();  //TODO tu też generator
 			size_t b = rand() % genes.size();
 
 			std::swap(genes[a], genes[b]);
@@ -70,10 +70,8 @@ public:
 
 	void cross(Genotype& parentA, Genotype& parentB) override
 	{
-		size_t crossover_point = rand() % parentA.size();
-
-		for (size_t i = crossover_point; i < parentA.size(); ++i)
-			std::swap(parentA[i], parentB[i]);
+		size_t crossover_point = rand() % parentA.size(); //TODO generator
+		std::swap_ranges(parentA.begin() + crossover_point, parentA.end(), parentB.begin() + crossover_point);
 	}
 };
 
@@ -87,17 +85,17 @@ private:
 	int best_of_percent_;
 
 public:
-	BestFitnessSelection(int best_of_percent = 10) : best_of_percent_(best_of_percent) { }
+	explicit BestFitnessSelection(int best_of_percent = 10) : best_of_percent_(best_of_percent) { }
 	~BestFitnessSelection() = default;
 
-	Population select(const Population& population, size_type mating_pool_size) override
+	Population select(const Population& population, size_t mating_pool_size) override
 	{
 		Population mating_pool;
 		mating_pool.reserve(mating_pool_size);
 
 		for (size_t i = 0; i < mating_pool_size; ++i)
 		{
-			int choice = rand() % int((best_of_percent_ / 100.f) * population.size());
+			int choice = rand() % int((best_of_percent_ / 100.f) * population.size()); //TODO generator
 			mating_pool.emplace_back(population[choice]);
 		}
 
