@@ -1,28 +1,45 @@
+/*
+ *	Class representing one of genetic operators - mutation
+ *	It is used to maintain diversity within population by
+ *	randomly changing parts of DNA of a member and therefore
+ *	applying possibly huge changes to environmental fitness
+ *
+ *	Authors: Michal Swiatek, Michal Sulek
+ *	Update:	 18.01.2020
+ *
+ *	Github repository: https://github.com/MichalKonradSulek/ZPR
+ */
+
 #ifndef __MUTATION__
 #define __MUTATION__
 
 #include <cstdlib>
-#include <iostream>
 
 template <typename GeneType>
 class Mutation
 {
-private:
-    unsigned mutationRate_;
 public:
-    explicit Mutation(unsigned mutationRate = 10) : mutationRate_(mutationRate) { }
+	using Gene = GeneType;
+
+private:
+    size_t mutation_rate_;
+
+public:
+    explicit Mutation(size_t mutationRate = 10) : mutation_rate_(mutationRate) { }
+	virtual ~Mutation() = default;
 
     virtual bool mutationCondition()
     {
         unsigned chance = rand() % 1000;
-        return chance < mutationRate_;
+        return chance < mutation_rate_;
     }
 
     virtual void mutate(GeneType& gene)
     {
     }
 
-    inline void setMutationRate(int mutationRate) { mutationRate_ = mutationRate; }
+	inline void getMutationRate() const			   { return mutation_rate_ }
+    inline void setMutationRate(int mutation_rate) { mutation_rate_ = mutation_rate; }
 };
 
 template <>

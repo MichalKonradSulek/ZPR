@@ -45,3 +45,13 @@ googletest-download/googletest-prefix/src/googletest-stamp/googletest-gitclone-l
 googletest-download/googletest-prefix/src/googletest-stamp/googletest-gitinfo.txt
 googletest-download/googletest-prefix/tmp/googletest-cfgcmd.txt
 googletest-src/
+ALL_BUILD.vcxproj.user
+bin/Debug/gtest_maind.pdb
+bin/Debug/gtestd.pdb
+Debug/example.ilk
+Debug/example.pdb
+example.dir/Debug/vc141.pdb
+example.vcxproj.user
+lib/Debug/gtest_maind.lib
+lib/Debug/gtestd.lib
+test.dir/Debug/vc141.pdb

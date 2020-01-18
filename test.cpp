@@ -1,11 +1,12 @@
 #include <iostream>
+#include <string>
 #include "gtest/gtest.h"
 
-#include "Member.h"
+#include "Specimen.h"
 #include "Mutation.h"
 #include "Environment.h"
 
-class CharSpecimen : public Specimen<char, std::string>
+class CharSpecimen : public Specimen<char, char>
 {
 public:
     CharSpecimen(const std::string& dna)

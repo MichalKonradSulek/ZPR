@@ -1,7 +1,7 @@
 #ifndef __TEST1__
 #define __TEST1__
 
-#include "Member.h"
+#include "Specimen.h"
 #include "Mutation.h"
 #include "Environment.h"
 
@@ -9,7 +9,7 @@ std::string str1 = "This is the string I'm trying to evolve!";
 
 const size_t GENES_PER_CHROMOSOME = 7;
 
-class MySpecimen : public Specimen<bool, char, std::string, std::string>
+class MySpecimen : public Specimen<bool, char>
 {
 public:
     MySpecimen()
@@ -18,21 +18,30 @@ public:
         for (auto& c : dna_)
             c = rand() % 2;
     }
-    ChromosomeContainer getFenotype() const override {
+
+    ChromosomeContainer getFenotype() const override
+	{
         ChromosomeContainer result;
-        result.reserve(dna_.size());
+		result.reserve(dna_.size());
+
         size_t counter = 0;
         char chromosome = 0;
-        for(const auto& i : dna_) {
+
+        for(const auto& gene : dna_)
+		{
             chromosome *= 2;
-            i ? ++chromosome : chromosome;
+			gene ? ++chromosome : chromosome;
             ++counter;
-            if(counter >= 7) {
-                counter = 0;
+            
+			if (counter >= 7) 
+			{
                 result.push_back(chromosome);
+
                 chromosome = 0;
+				counter = 0;
             }
         }
+
         return result;
     }
 };
@@ -44,7 +53,7 @@ public:
     {
         double result = 0;
         const auto& DNA = specimen.getFenotype();
-        for (int i = 0; i < str1.size(); i++)
+        for (size_t i = 0; i < str1.size(); i++)
         {
             if (DNA[i] == str1[i])
                 result += 10;
@@ -65,11 +74,6 @@ public:
         int chance = rand() % 1000;
         return chance < mutationRate;
     }
-
-//    void mutate(char&& gene)
-//    {
-//        gene += rand() % 10 - 5; //TODO gene may reach out of range
-//    }
 };
 
 class MyEnvironment : public Environment<MySpecimen, MyMutation>
@@ -77,7 +81,8 @@ class MyEnvironment : public Environment<MySpecimen, MyMutation>
 private:
     inline bool finishCondition() final
     {
-        return population_[0].getFenotype() == str1;
+		auto fenotype = population_[0].getFenotype();
+		return str1 == std::string(fenotype.begin(), fenotype.end());
     }
 
 public:
