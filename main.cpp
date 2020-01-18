@@ -5,14 +5,12 @@
 #include "Test1.h"
 #include "Test3.h"
 
-#include "Fitness.h"
-
 int main()
 {
     srand(time(nullptr));
 
     MyEnvironment  env1(10000);
-    Environment<MySpecimen3>  env3(10000);
+	GA::Environment<MySpecimen3>  env3(10000);
 
 	auto fitness1 = [](const MySpecimen& specimen)
 	{
@@ -30,8 +28,8 @@ int main()
 		return result;
 	};
 
-	env1.setMutationType<FlipBitMutation>(10, GENES_PER_CHROMOSOME * str1.length());
-	env1.setSelectionType<BestFitnessSelection<MySpecimen> >(5);
+	env1.setMutationType<GA::FlipBitMutation>(10, GENES_PER_CHROMOSOME * str1.length());
+	env1.setSelectionType<GA::BestFitnessSelection<MySpecimen> >(5);
 
     env1.runSimulation(fitness1, 100);
 

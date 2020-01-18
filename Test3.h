@@ -8,7 +8,7 @@
 
 std::string str3 = "Yet another string I'm trying to evolve!";
 
-class MySpecimen3 : public Specimen<char, char>
+class MySpecimen3 : public GA::Specimen<char, char>
 {
 public:
 	MySpecimen3()
@@ -25,7 +25,7 @@ public:
 	}
 };
 
-class CharMutation : public MultipleMutation<char>
+class CharMutation : public GA::MultipleMutation<char>
 {
 public:
 	CharMutation(int mutation_chance = 10, int max_mutations = 1) : MultipleMutation<char>(mutation_chance, max_mutations) { }

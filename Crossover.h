@@ -17,14 +17,18 @@
 #include <cstdlib>
 #include <vector>
 
-template <typename GeneType>
-class Crossover
-{
-public:
-	using Gene		= GeneType;
-	using Genotype  = std::vector<Gene>;
+namespace GA {
 
-    virtual void cross(Genotype& parent1, Genotype& parent2) = 0;
-};
+	template <typename GeneType>
+	class Crossover
+	{
+	public:
+		using Gene = GeneType;
+		using Genotype = std::vector<Gene>;
+
+		virtual void cross(Genotype& parent1, Genotype& parent2) = 0;
+	};
+
+}
 
 #endif // __CROSSOVER__

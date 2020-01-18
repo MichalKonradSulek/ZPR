@@ -9,7 +9,7 @@ std::string str1 = "This is the string I'm trying to evolve!";
 
 const size_t GENES_PER_CHROMOSOME = 7;
 
-class MySpecimen : public Specimen<bool, char>
+class MySpecimen : public GA::Specimen<bool, char>
 {
 	//using ChromosomeContainer = Specimen<bool, char>::Ch
 
@@ -48,7 +48,7 @@ public:
     }
 };
 
-class MyEnvironment : public Environment<MySpecimen>
+class MyEnvironment : public GA::Environment<MySpecimen>
 {
 private:
     inline bool finishCondition() final
