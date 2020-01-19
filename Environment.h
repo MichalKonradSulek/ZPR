@@ -25,8 +25,10 @@
 #include "Crossover.h"
 #include "Selection.h"
 
-#include "Predefined.h"
+#include "Mutations.h"
+#include "Crossovers.h"
 #include "Selections.h"
+
 #include "Exception.h"
 
 namespace GA {
@@ -73,7 +75,7 @@ namespace GA {
 
 			mutation_type_ = std::make_unique<SwapGeneMutation<Gene> >(); //TODO dodałbym do argumentów pointery na wszystkie rzeczy z ustawionym domyślnym new ...
 			crossover_type_ = std::make_unique<SinglePointCrossover<Gene> >();
-			selection_type_ = std::make_unique<BestFitnessSelection<SpecimenType> >();
+			selection_type_ = std::make_unique<RouletteWheelSelection<SpecimenType> >();
 		}
 
 		virtual void setPopulation(size_type population_size)
@@ -155,16 +157,16 @@ namespace GA {
 		 */
 		template <typename FitnessFunction>
 		void iteration(FitnessFunction fitness) {
-			evaluation(fitness);
-
-			showBest();		//	TODO: remove
-
 			selection();
 
 			crossover();
 			mutation();
 
 			reproduction();
+
+			evaluation(fitness);
+
+			showBest();		//	TODO: remove
 		}
 
 		/*
@@ -185,6 +187,7 @@ namespace GA {
 		void runSimulation(FitnessFunction fitness, FinishCondition finishCondition, int number_of_iterations = -1) //TODO dodałbym bool ignoreFinishCondidtions = false
 		{
 			setPopulation(population_.size());
+			evaluation(fitness);
 
 			if (number_of_iterations == -1)
 			{
