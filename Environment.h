@@ -208,6 +208,7 @@ namespace GA {
 			std::cout << std::string(fenotype.begin(), fenotype.end()) << "\tfitness: " << (*it).getFitness() << '\n'; //TODO dangerous population_[0]
 		}
 
+		//	For Mutations with strictly specified Gene type
 		template <typename MutationType, typename... Args>
 		void setMutationType(Args&&... args)
 		{
@@ -215,18 +216,26 @@ namespace GA {
 			mutation_type_ = std::make_unique<MutationType>(std::forward<Args>(args)...);
 		}
 
-		template <typename CrossoverType, typename... Args>
+		//	Generic function templates taking a specified strategy
+		template <template <typename T> typename MutationType, typename... Args>
+		void setMutationType(Args&&... args)
+		{
+			mutation_type_.reset();
+			mutation_type_ = std::make_unique<MutationType<Gene> >(std::forward<Args>(args)...);
+		}
+
+		template <template <typename T> typename CrossoverType, typename... Args>
 		void setCrossoverType(Args&&... args)
 		{
 			crossover_type_.reset();
-			crossover_type_ = std::make_unique<CrossoverType>(std::forward<Args>(args)...);
+			crossover_type_ = std::make_unique<CrossoverType<Gene> >(std::forward<Args>(args)...);
 		}
 
-		template <typename SelectionType, typename... Args>
+		template <template <typename T> typename SelectionType, typename... Args>
 		void setSelectionType(Args&&... args)
 		{
 			selection_type_.reset();
-			selection_type_ = std::make_unique<SelectionType>(std::forward<Args>(args)...);
+			selection_type_ = std::make_unique<SelectionType<SpecimenType> >(std::forward<Args>(args)...);
 		}
 	};
 

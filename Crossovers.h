@@ -1,3 +1,12 @@
+/*
+ *  Set of predefined crossover strategies for genetic algorithms
+ *
+ *  Authors: Michal Swiatek, Michal Sulek
+ *	Update:	 19.01.2020
+ *
+ *	Github repository: https://github.com/MichalKonradSulek/ZPR
+ */
+
 #ifndef __CROSSOVERS__
 #define __CROSSOVERS__
 
@@ -9,6 +18,12 @@
 
 namespace GA {
 
+	/**
+	 *	@brief	Crossover strategy with only one crossover point
+	 *
+	 *	@details Crossover point is randomly picked, then all genes
+	 *			 after that crossover point get swapped with other parent
+	 */
 	template <typename GeneType>
 	class SinglePointCrossover : public Crossover<GeneType>
 	{
@@ -23,6 +38,12 @@ namespace GA {
 		}
 	};
 
+	/**
+	 *	@brief	Crossover strategy with multiple crossover points
+	 *
+	 *	@details Crossover points are randomly picked, then genes are
+	 *			 crossed between each non-overlaping section
+	 */
 	template <typename GeneType>
 	class MultiplePointCrossover : public Crossover<GeneType>
 	{
@@ -53,6 +74,11 @@ namespace GA {
 		int number_of_points_;
 	};
 
+	/**
+	 *	@brief	Crossover strategy treating each gene pair separately
+	 *
+	 *	@details For ech gene of parents there is a 50% chance to be crossed
+	 */
 	template <typename GeneType>
 	class UniformCrossover : public Crossover<GeneType>
 	{

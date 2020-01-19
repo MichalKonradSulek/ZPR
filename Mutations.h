@@ -1,3 +1,12 @@
+/*
+ *  Set of predefined mutation strategies for genetic algorithms
+ *
+ *  Authors: Michal Swiatek, Michal Sulek
+ *	Update:	 19.01.2020
+ *
+ *	Github repository: https://github.com/MichalKonradSulek/ZPR
+ */
+
 #ifndef __MUTATIONS__
 #define __MUTATIONS__
 
@@ -8,6 +17,12 @@
 
 namespace GA {
 
+	/**
+	 *	@brief	Mutation strategy aimed specifically for boolean Gene type
+	 *
+	 *	@details N bits are randomly picked and for each of them there is
+	 *			 chance to be flipped equivalent to mutation_chance
+	 */
 	class FlipBitMutation : public MultipleMutation<bool>
 	{
 	public:
@@ -26,6 +41,12 @@ namespace GA {
 		}
 	};
 
+	/**
+	 *	@brief	Mutation strategy that swaps pairs of Genes
+	 *
+	 *	@details N pairs of genes are picked and for each of them there is
+	 *			 a swap chance equivalent to mutation_chance
+	 */
 	template <typename GeneType>
 	class SwapGeneMutation : public MultipleMutation<GeneType>
 	{
@@ -51,6 +72,13 @@ namespace GA {
 		int swap_range_;
 	};
 
+
+	/**
+	 *	@brief	Mutation strategy that randomly shuffles a range of Genes
+	 *
+	 *	@details A point and a range of mutation are randomly picked, then
+	 *			 genes in range <point, scramble_range) are shuffled
+	 */
 	template <typename GeneType>
 	class ScrambleGenesMutation : public Mutation<GeneType>
 	{
@@ -76,6 +104,12 @@ namespace GA {
 		int scramble_range_;
 	};
 
+	/**
+	 *	@brief	Mutation strategy that inverses a range of Genes
+	 *
+	 *	@details A point and a range of mutation are randomly picked, then
+	 *			 genes in range <point, scramble_range) are inverted
+	 */
 	template <typename GeneType>
 	class InverseGenesMutation : public Mutation<GeneType>
 	{

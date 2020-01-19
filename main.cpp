@@ -39,10 +39,10 @@ int main()
 
 	//.setMutationType<GA::SwapGeneMutation<bool> >(7, GA::MUTATION_CHANCE_PERCENT * 0.05, str1.length());
 	//env1.setMutationType<GA::ScrambleGenesMutation<bool> >(7, GA::MUTATION_CHANCE_PERCENT * 0.05);
-	env1.setMutationType<GA::InverseGenesMutation<bool> >(7, GA::MUTATION_CHANCE_PERCENT * 0.05);
-	env1.setSelectionType<GA::RankSelection<MySpecimen> >();
+	env1.setMutationType<GA::SwapGeneMutation>(7, GA::MUTATION_CHANCE_PERCENT * 0.05);
+	env1.setSelectionType<GA::RankSelection>();
 
-    //env1.runSimulation(fitness1, finishCondition1);
+    env1.runSimulation(fitness1, finishCondition1);
 
 	auto fitness3 = [](const MySpecimen3& specimen)
 	{
@@ -66,13 +66,13 @@ int main()
 	};
 
 	env3.setMutationType<CharMutation>(GA::MUTATION_CHANCE_PERCENT * 0.5, 10);
-	//env3.setMutationType<GA::SwapGeneMutation<char> >(5, GA::MUTATION_CHANCE_PERCENT);
+	//env3.setMutationType<GA::SwapGeneMutation>(5, GA::MUTATION_CHANCE_PERCENT);
 	
-	env3.setSelectionType<GA::RankSelection<MySpecimen3> >();
+	env3.setSelectionType<GA::RankSelection>();
 
-	env3.setCrossoverType<GA::UniformCrossover<char> >();
-	//env3.setCrossoverType<GA::MultiplePointCrossover<char> >(5);
-	//env3.setCrossoverType<GA::SinglePointCrossover<char> >();
+	env3.setCrossoverType<GA::UniformCrossover>();
+	//env3.setCrossoverType<GA::MultiplePointCrossover>(5);
+	//env3.setCrossoverType<GA::SinglePointCrossover>();
 
 	env3.runSimulation(fitness3, finishCondition3);
 

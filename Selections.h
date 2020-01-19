@@ -1,3 +1,12 @@
+/*
+ *  Set of predefined selection strategies for genetic algorithms
+ *
+ *  Authors: Michal Swiatek, Michal Sulek
+ *	Update:	 19.01.2020
+ *
+ *	Github repository: https://github.com/MichalKonradSulek/ZPR
+ */
+
 #ifndef __SELECTIONS__
 #define __SELECTIONS__
 
@@ -10,8 +19,15 @@
 
 namespace GA {
 
+	/**
+	 *	@brief	Selection strategy that picks parents from a certain
+	 *			percent of best individuals
+	 *
+	 *	@details Populations gets sorted and parents are picked from
+	 *			 best precentage of individuals
+	 */
 	template <typename SpecimenType>
-	class BestFitnessSelection : public Selection<SpecimenType>
+	class BestFitnessPercentageSelection : public Selection<SpecimenType>
 	{
 	public:
 		using Population = typename Selection<SpecimenType>::Population;
@@ -20,17 +36,21 @@ namespace GA {
 		int best_of_percent_;
 
 	public:
-		explicit BestFitnessSelection(int best_of_percent = 10) : best_of_percent_(best_of_percent) { }
-		~BestFitnessSelection() = default;
+		explicit BestFitnessPercentageSelection(int best_of_percent = 10) : best_of_percent_(best_of_percent) { }
+		~BestFitnessPercentageSelection() = default;
 
 		Population select(const Population& population, size_t mating_pool_size) override
 		{
 			Population mating_pool;
 			mating_pool.reserve(mating_pool_size);
 
+			Population pop = population;
+
+			std::sort(pop.begin(), pop.end(), [](const auto& a, const auto& b) { return a.getFitness() < b.getFitness(); });
+
 			for (size_t i = 0; i < mating_pool_size; ++i)
 			{
-				int choice = rand() % int((best_of_percent_ / 100.f) * population.size()); //TODO generator
+				int choice = rand() % int((best_of_percent_ / 100.f) * population.size());
 				mating_pool.emplace_back(population[choice]);
 			}
 
@@ -38,6 +58,17 @@ namespace GA {
 		}
 	};
 
+	/**
+	 *	@brief	Selection strategy that implements roulette wheel selection
+	 *
+	 *	@details Each individual has propability to be chosen as parent 
+	 *			 proportional to his fitness score. For each wheel spin
+	 *			 a parent is selected. This strategy implies fitness
+	 *			 preasure over population and can lead to very quick
+	 *			 convergence of solutions
+	 *
+	 *	@note	This strategy is doesn't work with negative fitnesses
+	 */
 	template <typename SpecimenType>
 	class RouletteWheelSelection : public Selection<SpecimenType>
 	{
@@ -99,6 +130,21 @@ namespace GA {
 		}
 	};
 
+	/**
+	 *	@brief	Selection strategy that implements stochastic universal sampling
+	 *
+	 *	@details Each individual has propability to be chosen as parent
+	 *			 proportional to his fitness score but picking parents
+	 *			 happens during one wheel spin. This strategy implies
+	 *			 fitness preasure over population and can lead to very
+	 *			 quick convergence of solutions. This strategy has higher
+	 *			 chance to pick more fitting individuals than roulette wheel
+	 *
+	 *	@note	This strategy is doesn't work with negative fitnesses
+	 *	@note	This strategy is a modification of Roulette Wheel
+	 *
+	 *	@see	GA::RouletteWheelSelection
+	 */
 	template <typename SpecimenType>
 	class StochasticUniversalSamplingSelection : public RouletteWheelSelection<SpecimenType>
 	{
@@ -132,6 +178,17 @@ namespace GA {
 		}
 	};
 
+	/**
+	 *	@brief	Selection strategy that implements rank selection
+	 *
+	 *	@details Each individual is ranked based on his fitness score.
+	 *			 Then a Roulette Wheel is performed based on ranks
+	 *
+	 *	@note	This strategy accepts negative fitness values
+	 *	@note	This strategy is a modification of Roulette Wheel
+	 *
+	 *	@see	GA::RouletteWheelSelection
+	 */
 	template <typename SpecimenType>
 	class RankSelection : public RouletteWheelSelection<SpecimenType>
 	{
@@ -167,6 +224,14 @@ namespace GA {
 		}
 	};
 
+	/**
+	 *	@brief Selection strategy implementing tournament selection
+	 *
+	 *	@details For each parent K randomly chosen individuals are picked.
+	 *			 Each gets evaluated and best one becomes selected.
+	 *
+	 *	@note	This strategy accepts negative fitness values
+	 */
 	template <typename SpecimenType>
 	class TournamentSelection : public Selection<SpecimenType>
 	{
