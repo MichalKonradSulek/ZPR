@@ -16,7 +16,7 @@ namespace GA {
 		using Genotype = typename Mutation<bool>::Genotype;
 
 	public:
-		explicit FlipBitMutation(int mutation_chance = MUTATION_CHANCE_PERCENT, int max_mutations = 1) : MultipleMutation<bool>(mutation_chance, 100, max_mutations) { }
+		explicit FlipBitMutation(int mutation_chance = MUTATION_CHANCE_PERCENT, int mutation_iterations = 1, int max_mutations = 1) : MultipleMutation<bool>(mutation_chance, mutation_iterations, max_mutations) { }
 		~FlipBitMutation() override = default;
 
 		void mutateOnce(Genotype& genes) const override
@@ -35,7 +35,7 @@ namespace GA {
 		using Genotype = typename Mutation<GeneType>::Genotype;
 
 	public:
-		explicit SwapGeneMutation(int mutation_chance = MUTATION_CHANCE_PERCENT, int max_mutations = 10) : MultipleMutation<GeneType>(mutation_chance, 100, max_mutations) { }
+		explicit SwapGeneMutation(int mutation_chance = MUTATION_CHANCE_PERCENT, int mutation_iterations = 1, int max_mutations = 10) : MultipleMutation<GeneType>(mutation_chance, mutation_iterations, max_mutations) { }
 		~SwapGeneMutation() = default;
 
 		void mutateOnce(Genotype& genes) const override

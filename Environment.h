@@ -64,11 +64,6 @@ namespace GA {
 		std::unique_ptr<Crossover<Gene>>			crossover_type_;
 		std::unique_ptr<Selection<SpecimenType>>	selection_type_;
 
-		virtual bool finishCondition()
-		{
-			return false;
-		}
-
 	public:
 		explicit Environment(int population_size)
 		{
@@ -179,23 +174,25 @@ namespace GA {
 		 *
 		 *	@tparam FitnessFunction	Functor object taking SpecimenType as an argument and returning
 		 *			it's fitness value converted to double
+		 *	@tparam	FinishCondition	Functor object taking const Population& and FitnessFunction
+		 *			and returning a boolean indicator whether a finish condition is met
 		 *
 		 *	@param	number_of_iterations Specifies a number of generations steps, set to -1 to
 		 *			perform evolution until FinishCondition is met
 		 */
-		template <typename FitnessFunction>
-		void runSimulation(FitnessFunction fitness, int number_of_iterations = -1) //TODO dodałbym bool ignoreFinishCondidtions = false
+		template <typename FitnessFunction, typename FinishCondition>
+		void runSimulation(FitnessFunction fitness, FinishCondition finishCondition, int number_of_iterations = -1) //TODO dodałbym bool ignoreFinishCondidtions = false
 		{
 			setPopulation(population_.size());
 
 			if (number_of_iterations == -1)
 			{
-				while (!finishCondition())
+				while (!finishCondition(population_, fitness))
 					iteration(fitness);
 			}
 			else
 			{
-				while (!finishCondition() && --number_of_iterations >= 0)
+				while (!finishCondition(population_, fitness) && --number_of_iterations >= 0)
 					iteration(fitness);
 			}
 		}

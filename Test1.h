@@ -5,7 +5,7 @@
 #include "Mutation.h"
 #include "Environment.h"
 
-std::string str1 = "This is the string I'm trying to evolve!";
+std::string str1 = "String to evolve!";
 
 const size_t GENES_PER_CHROMOSOME = 7;
 
@@ -50,13 +50,6 @@ public:
 
 class MyEnvironment : public GA::Environment<MySpecimen>
 {
-private:
-    inline bool finishCondition() final
-    {
-		auto fenotype = population_[0].getFenotype();
-		return str1 == std::string(fenotype.begin(), fenotype.end());
-    }
-
 public:
     MyEnvironment(int populationSize) : Environment(populationSize) { }
 };

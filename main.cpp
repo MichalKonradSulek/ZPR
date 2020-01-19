@@ -12,6 +12,12 @@ int main()
     MyEnvironment  env1(10000);
 	GA::Environment<MySpecimen3>  env3(10000);
 
+	auto finishCondition1 = [](const auto& population, auto fitness)
+	{
+		auto fenotype = population[0].getFenotype();
+		return str1 == std::string(fenotype.begin(), fenotype.end());
+	};
+
 	auto fitness1 = [](const MySpecimen& specimen)
 	{
 		double result = 0;
@@ -28,10 +34,10 @@ int main()
 		return result;
 	};
 
-	env1.setMutationType<GA::FlipBitMutation>(10, GENES_PER_CHROMOSOME * str1.length());
+	env1.setMutationType<GA::FlipBitMutation>(GA::MUTATION_CHANCE_PERCENT * 0.5, GENES_PER_CHROMOSOME * str1.length(), str1.length());
 	env1.setSelectionType<GA::BestFitnessSelection<MySpecimen> >(5);
 
-    //env1.runSimulation(fitness1, 100);
+    env1.runSimulation(fitness1, finishCondition1);
 
 	auto fitness3 = [](const MySpecimen3& specimen)
 	{
@@ -49,9 +55,15 @@ int main()
 		return result;
 	};
 
+	auto finishCondition3 = [](const auto& population, auto fitness)
+	{
+		auto fenotype = population[0].getFenotype();
+		return str3 == std::string(fenotype.begin(), fenotype.end());
+	};
+
 	env3.setMutationType<CharMutation>(GA::MUTATION_CHANCE_PERCENT * 0.5, 20);
 
-	env3.runSimulation(fitness3, 100);
+	env3.runSimulation(fitness3, finishCondition3);
 
     std::cout << "\n\n\n";
 
