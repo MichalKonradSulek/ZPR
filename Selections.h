@@ -6,9 +6,6 @@
 #include <limits>
 #include <algorithm>
 
-#include <iostream>
-#include <random>
-
 #include "Selection.h"
 
 namespace GA {

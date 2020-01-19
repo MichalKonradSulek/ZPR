@@ -6,6 +6,7 @@
 #include "Test3.h"
 
 #include "Selections.h"
+#include "Mutations.h"
 
 int main()
 {
@@ -35,7 +36,9 @@ int main()
 		return result;
 	};
 
-	env1.setMutationType<GA::SwapGeneMutation<bool> >(GA::MUTATION_CHANCE_PERCENT * 0.05, str1.length());
+	//.setMutationType<GA::SwapGeneMutation<bool> >(7, GA::MUTATION_CHANCE_PERCENT * 0.05, str1.length());
+	//env1.setMutationType<GA::ScrambleGenesMutation<bool> >(7, GA::MUTATION_CHANCE_PERCENT * 0.05);
+	env1.setMutationType<GA::InverseGenesMutation<bool> >(7, GA::MUTATION_CHANCE_PERCENT * 0.05);
 	env1.setSelectionType<GA::RankSelection<MySpecimen> >();
 
     env1.runSimulation(fitness1, finishCondition1);
@@ -62,7 +65,7 @@ int main()
 	};
 
 	env3.setMutationType<CharMutation>(GA::MUTATION_CHANCE_PERCENT * 0.5, 10);
-	env3.setSelectionType<GA::RankSelection<MySpecimen3> >();
+	env3.setSelectionType<GA::StochasticUniversalSamplingSelection<MySpecimen3> >();
 
 	env3.runSimulation(fitness3, finishCondition3);
 
