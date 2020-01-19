@@ -34,7 +34,7 @@ public:
 class CharMutation : public GA::MultipleMutation<char>
 {
 public:
-	CharMutation(int mutation_chance = GA::MUTATION_CHANCE_PERCENT, int max_mutations = 1) : MultipleMutation<char>(mutation_chance, 40, max_mutations) { }
+	explicit CharMutation(int mutation_chance = GA::MUTATION_CHANCE_PERCENT, int max_mutations = 1) : MultipleMutation<char>(mutation_chance, 40, max_mutations) { }
 	~CharMutation() = default;
 
 	void performMutation(Genotype& genes) const override

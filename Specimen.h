@@ -1,4 +1,4 @@
-/*	
+/**
  *	Class representing member of population, GeneContainer specified by user
  *	has been removed due to vector reliability and efficiency. Continous storage
  *	supplied by vector is best suiting for keeping DNA data.
@@ -49,7 +49,7 @@ namespace GA {
 		explicit Specimen(Genotype&& genotype) : dna_(genotype), fitness_(0.0) {}
 		virtual ~Specimen() = default;
 
-		/*
+		/**
 		 *	@brief Conversion of Genotype into Fenotype
 		 *	
 		 *	@details Define Chromosome conversion when using Chromosome different from Gene
