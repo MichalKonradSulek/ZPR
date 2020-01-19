@@ -79,9 +79,8 @@ namespace GA {
 		virtual void setPopulation(size_type population_size)
 		{
 			population_.clear();
-			//population_.assign(population_size, SpecimenType());
 			population_.reserve(population_size);
-			for (int i = 0; i < population_size; ++i)
+			for (size_type i = 0; i < population_size; ++i)
 				population_.emplace_back(SpecimenType());
 		}
 
@@ -158,14 +157,14 @@ namespace GA {
 		void iteration(FitnessFunction fitness) {
 			evaluation(fitness);
 
+			showBest();		//	TODO: remove
+
 			selection();
 
 			crossover();
 			mutation();
 
 			reproduction();
-
-			showBest();		//	TODO: remove
 		}
 
 		/*
@@ -201,16 +200,9 @@ namespace GA {
 
 		void showBest()
 		{
-			//auto fenotype = population_[0].getFenotype();
 			auto it = std::max_element(population_.begin(), population_.end(), [](const auto& a, const auto& b) {return a.getFitness() < b.getFitness(); });
 			auto fenotype =  (*it).getFenotype();
 			std::cout << std::string(fenotype.begin(), fenotype.end()) << "\tfitness: " << (*it).getFitness() << '\n'; //TODO dangerous population_[0]
-		}
-
-		SpecimenType getBest()
-		{
-			if (!population_.size())	throw Exception("Population vector is empty!");
-			return population_[0];
 		}
 
 		template <typename MutationType, typename... Args>

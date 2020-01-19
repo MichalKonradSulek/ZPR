@@ -55,3 +55,4 @@ example.vcxproj.user
 lib/Debug/gtest_maind.lib
 lib/Debug/gtestd.lib
 test.dir/Debug/vc141.pdb
+test.vcxproj.user

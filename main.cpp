@@ -30,16 +30,13 @@ int main()
 		{
 		    if (fenotype[i] == str1[i])
 		        result += 10;
-		   // else if (fenotype[i] < 32 || fenotype[i] > 126)
-		   //    result -= 5;
 		}
 
 		return result;
 	};
 
 	env1.setMutationType<GA::SwapGeneMutation<bool> >(GA::MUTATION_CHANCE_PERCENT * 0.05, str1.length());
-	//env1.setSelectionType<GA::BestFitnessSelection<MySpecimen> >(5);
-	env1.setSelectionType<GA::RouletteWheelSelection<MySpecimen> >();
+	env1.setSelectionType<GA::RankSelection<MySpecimen> >();
 
     env1.runSimulation(fitness1, finishCondition1);
 
@@ -52,8 +49,6 @@ int main()
 		{
 			if (fenotype[i] == str3[i])
 				result += 10;
-			//else
-			//	result -= 5;
 		}
 
 		return result;
@@ -66,9 +61,8 @@ int main()
 		return str3 == std::string(fenotype.begin(), fenotype.end());
 	};
 
-	//env3.setMutationType<CharMutation>(GA::MUTATION_CHANCE_PERCENT * 0.1, 20);
-	env3.setMutationType<GA::SwapGeneMutation<char> >(GA::MUTATION_CHANCE_PERCENT * 0.1, 40, 20);
-	env3.setSelectionType<GA::RouletteWheelSelection<MySpecimen3> >();
+	env3.setMutationType<CharMutation>(GA::MUTATION_CHANCE_PERCENT * 0.5, 10);
+	env3.setSelectionType<GA::RankSelection<MySpecimen3> >();
 
 	env3.runSimulation(fitness3, finishCondition3);
 

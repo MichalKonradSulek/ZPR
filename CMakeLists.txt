@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 14)
 add_executable(example main.cpp)
 
 # TESTS WITH INSTALLED GTEST
-find_package(GTest REQUIRED)
+find_package(GTest)
 
 add_executable(testGTestInstalled test.cpp)
 target_include_directories(testGTestInstalled PUBLIC ${GTEST_INCLUDE_DIRS})
