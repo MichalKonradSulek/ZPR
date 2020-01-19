@@ -5,7 +5,8 @@
 #include "Mutation.h"
 #include "Environment.h"
 
-std::string str1 = "String to evolve!";
+//std::string str1 = "String to evolve!";
+std::string str1 = "This is the string I'm trying to evolve!";
 
 const size_t GENES_PER_CHROMOSOME = 7;
 
