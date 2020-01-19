@@ -47,6 +47,12 @@ public:
 
         return result;
     }
+
+	void print() const
+	{
+		auto fenotype = getFenotype();
+		std::cout << std::string(fenotype.begin(), fenotype.end()) << "\tfitness: " << getFitness() << '\n';
+	}
 };
 
 class MyEnvironment : public GA::Environment<MySpecimen>

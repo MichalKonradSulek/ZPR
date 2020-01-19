@@ -40,7 +40,7 @@ int main()
 	env1.setCrossoverType<GA::SinglePointCrossover>();
 	env1.setSelectionType<GA::RankSelection>();
 
-    env1.runSimulation(fitness1, finishCondition1);
+    env1.runSimulation(fitness1, finishCondition1, -1);
 
 	auto fitness3 = [](const MySpecimen3& specimen)
 	{

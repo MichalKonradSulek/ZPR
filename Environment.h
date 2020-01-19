@@ -202,9 +202,11 @@ namespace GA {
 		 *
 		 *	@tparam	FitnessFunction	Functor object taking SpecimenType as an argument and returning
 		 *			it's fitness value converted to double
+		 *
+		 *	@param	show_best			 Calls print() on best individual of generation
 		 */
 		template <typename FitnessFunction>
-		void iteration(FitnessFunction fitness) {
+		void iteration(FitnessFunction fitness, bool show_best = true) {
 			selection();
 
 			crossover();
@@ -214,7 +216,8 @@ namespace GA {
 
 			evaluation(fitness);
 
-			showBest();		//	TODO: remove
+			if (show_best)
+				getBest().print();
 		}
 
 		/*
@@ -230,9 +233,10 @@ namespace GA {
 		 *
 		 *	@param	number_of_iterations Specifies a number of generations steps, set to -1 to
 		 *			perform evolution until FinishCondition is met
+		 *	@param	show_best			 Calls print() on best individual of generation
 		 */
 		template <typename FitnessFunction, typename FinishCondition>
-		void runSimulation(FitnessFunction fitness, FinishCondition finishCondition, int number_of_iterations = -1) //TODO dodałbym bool ignoreFinishCondidtions = false
+		void runSimulation(FitnessFunction fitness, FinishCondition finishCondition, int number_of_iterations = -1, bool show_best = true) //TODO dodałbym bool ignoreFinishCondidtions = false
 		{
 			if (population_.empty())
 				generatePopulation(population_.size());
@@ -242,20 +246,19 @@ namespace GA {
 			if (number_of_iterations == -1)
 			{
 				while (!finishCondition(population_, fitness))
-					iteration(fitness);
+					iteration(fitness, show_best);
 			}
 			else
 			{
 				while (!finishCondition(population_, fitness) && --number_of_iterations >= 0)
-					iteration(fitness);
+					iteration(fitness, show_best);
 			}
 		}
 
-		void showBest()
+		SpecimenType& getBest()
 		{
 			auto it = std::max_element(population_.begin(), population_.end(), [](const auto& a, const auto& b) {return a.getFitness() < b.getFitness(); });
-			auto fenotype = (*it).getFenotype();
-			std::cout << std::string(fenotype.begin(), fenotype.end()) << "\tfitness: " << (*it).getFitness() << '\n';
+			return *it;
 		}
 
 		//	Get/set population
