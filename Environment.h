@@ -116,7 +116,7 @@ namespace GA {
 		virtual void crossover()
 		{
 			for (size_t i = 0; i < mating_pool_.size() - 1; i += 2)
-				crossover_type_->cross(mating_pool_[i].getDNA(), mating_pool_[i + 1].getDNA());
+				crossover_type_->cross(mating_pool_[i].getGenotype(), mating_pool_[i + 1].getGenotype());
 
 			offspring_ = std::move(mating_pool_);
 		}
@@ -131,7 +131,7 @@ namespace GA {
 		virtual void mutation()
 		{
 			for (auto& individual : offspring_)
-				mutation_type_->mutate(individual.getDNA());
+				mutation_type_->mutate(individual.getGenotype());
 		}
 
 		/*

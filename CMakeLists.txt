@@ -2,6 +2,17 @@ cmake_minimum_required(VERSION 2.8.2)
 project(ZPR)
 set(CMAKE_CXX_STANDARD 14)
 
+# EXAMPLE
+add_executable(example main.cpp)
+
+# TESTS WITH INSTALLED GTEST
+find_package(GTest REQUIRED)
+
+add_executable(testGTestInstalled test.cpp)
+target_include_directories(testGTestInstalled PUBLIC ${GTEST_INCLUDE_DIRS})
+target_link_libraries(testGTestInstalled ${GTEST_LIBRARIES} pthread)
+
+# TEST WITH GTEST INSTALLED AUTOMATICALLY IN CURRENT DIRECTION
 # Download and unpack googletest at configure time
 configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
@@ -35,7 +46,5 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
 endif()
 
 # Now simply link against gtest or gtest_main as needed. Eg
-add_executable(example main.cpp)
-
-add_executable(test test.cpp)
-target_link_libraries(test gtest_main)
+add_executable(testGTestToBeInstalled test.cpp)
+target_link_libraries(testGTestToBeInstalled gtest_main)
