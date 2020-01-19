@@ -48,6 +48,13 @@ namespace GA {
 	private:
 		int mutation_chance_;
 
+	protected:
+        virtual bool mutationCondition() const
+        {
+            int chance = rand() % MAX_MUTATION_CHANCE; //TODO that should be from generator
+            return chance < mutation_chance_;
+        }
+
 	public:
 		explicit Mutation(int mutation_chance = MUTATION_CHANCE_PERCENT) : mutation_chance_(mutation_chance) { }
 		virtual ~Mutation() = default;
@@ -59,12 +66,6 @@ namespace GA {
 		 *		     than mutation_chance, override this function to change
 		 *			 mutation criteria
 		 */
-		virtual bool mutationCondition() const
-		{
-			int chance = rand() % MAX_MUTATION_CHANCE; //TODO that should be from generator
-			return chance < mutation_chance_;
-		}
-
 		virtual void mutate(Genotype& genes) const = 0;
 
 		inline int getMutationChance() const { return mutation_chance_; }
@@ -87,6 +88,8 @@ namespace GA {
 	template <typename GeneType>
 	class MultipleMutation : public Mutation<GeneType>
 	{
+	public:
+	    using Genotype = typename Mutation<GeneType>::Genotype;
 	private:
 		/*
 		 *	@brief  Equivalent of mutate() in regular Mutation
@@ -126,7 +129,7 @@ namespace GA {
 			{
 				for (int i = 0, mutations_occured = 0; i < mutation_iterations_ && mutations_occured < max_mutations_; ++i)
 				{
-					if (mutationCondition())
+					if (Mutation<GeneType>::mutationCondition())
 					{
 						mutateOnce(genes);
 						++mutations_occured;
