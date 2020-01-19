@@ -150,6 +150,7 @@ namespace GA {
 	{
 	public:
 		using Population = typename RouletteWheelSelection<SpecimenType>::Population;
+		using Base = RouletteWheelSelection<SpecimenType>;
 
 		Population select(const Population& population, size_t mating_pool_size) override
 		{
@@ -159,18 +160,18 @@ namespace GA {
 
 			generateWheel(population);
 
-			double step = cumultative_fitness.back() / mating_pool_size;
+			double step = Base::cumultative_fitness.back() / mating_pool_size;
 
 			//	Pick starting point
-			double random_fitness = getDouble() * cumultative_fitness.back();
+			double random_fitness = Base::getDouble() * Base::cumultative_fitness.back();
 
 			for (size_t i = 0; i < mating_pool_size; ++i, random_fitness += step)
 			{
-				if (random_fitness > cumultative_fitness.back())
-					random_fitness = static_cast<int>(random_fitness) % static_cast<int>(cumultative_fitness.back());
+				if (random_fitness > Base::cumultative_fitness.back())
+					random_fitness = static_cast<int>(random_fitness) % static_cast<int>(Base::cumultative_fitness.back());
 
 				//	Find last occurence that is < random_fitness
-				int index = closest(cumultative_fitness, random_fitness);
+				int index = closest(Base::cumultative_fitness, random_fitness);
 				mating_pool.emplace_back(population[index]);
 			}
 
@@ -194,6 +195,7 @@ namespace GA {
 	{
 	public:
 		using Population = typename Selection<SpecimenType>::Population;
+		using Base = RouletteWheelSelection<SpecimenType>;
 
 		Population select(const Population& population, size_t mating_pool_size) override
 		{
@@ -209,14 +211,14 @@ namespace GA {
 			for (int i = 0; i < pop.size(); ++i)
 				pop[i].setFitness(i + 1);
 
-			generateWheel(pop);
+			Base::generateWheel(pop);
 
 			for (size_t i = 0; i < mating_pool_size; ++i)
 			{
-				double random_fitness = getDouble() * cumultative_fitness.back();
+				double random_fitness = Base::getDouble() * Base::cumultative_fitness.back();
 
 				//	Find last occurence that is < random_fitness
-				int index = closest(cumultative_fitness, random_fitness);
+				int index = Base::closest(Base::cumultative_fitness, random_fitness);
 				mating_pool.emplace_back(pop[index]);
 			}
 
@@ -236,7 +238,7 @@ namespace GA {
 	class TournamentSelection : public Selection<SpecimenType>
 	{
 	public:
-		TournamentSelection(size_t members_per_parent) : members_per_parent_(members_per_parent) { }
+		explicit TournamentSelection(size_t members_per_parent) : members_per_parent_(members_per_parent) { }
 		~TournamentSelection() = default;
 
 		using Population = typename RouletteWheelSelection<SpecimenType>::Population;
