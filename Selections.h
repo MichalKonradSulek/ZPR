@@ -67,7 +67,7 @@ namespace GA {
 	 *			 preasure over population and can lead to very quick
 	 *			 convergence of solutions
 	 *
-	 *	@note	This strategy is doesn't work with negative fitnesses
+	 *	@note	This strategy doesn't work with negative fitnesses
 	 */
 	template <typename SpecimenType>
 	class RouletteWheelSelection : public Selection<SpecimenType>
@@ -140,7 +140,7 @@ namespace GA {
 	 *			 quick convergence of solutions. This strategy has higher
 	 *			 chance to pick more fitting individuals than roulette wheel
 	 *
-	 *	@note	This strategy is doesn't work with negative fitnesses
+	 *	@note	This strategy doesn't work with negative fitnesses
 	 *	@note	This strategy is a modification of Roulette Wheel
 	 *
 	 *	@see	GA::RouletteWheelSelection
