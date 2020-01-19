@@ -70,29 +70,62 @@ namespace GA {
 		std::unique_ptr<Crossover<Gene>>			crossover_type_;
 		std::unique_ptr<Selection<SpecimenType>>	selection_type_;
 
-	public:
-		explicit Environment(size_type population_size = 0)
+	private:
+		void setDefaults()
 		{
-			setPopulation(population_size);
-
 			mutation_type_ = std::make_unique<SwapGeneMutation<Gene> >();
 			crossover_type_ = std::make_unique<SinglePointCrossover<Gene> >();
 			selection_type_ = std::make_unique<RouletteWheelSelection<SpecimenType> >();
 		}
+
+	public:
+		explicit Environment(size_type population_size = 0)
+		{
+			generatePopulation(population_size);
+
+			setDefaults();
+		}
+
+		explicit Environment(const Population& population) : population_(population) { setDefaults(); }
+		explicit Environment(Population&& population) :		 population_(population) { setDefaults(); }
 
 		explicit Environment(size_type					population_size,
 							 Mutation<Gene>*			mutation_ptr,
 							 Crossover<Gene>*			crossover_ptr,
 							 Selection<SpecimenType>*	selection_ptr)
 		{
-			setPopulation(population_size);
+			generatePopulation(population_size);
 
 			mutation_type_ = std::unique_ptr<Mutation<Gene> >(mutation_ptr);
 			crossover_type_ = std::unique_ptr<Crossover<Gene> >(crossover_ptr);
 			selection_type_ = std::unique_ptr<Selection<SpecimenType> >(selection_ptr);
 		}
 
-		virtual void setPopulation(size_type population_size)
+		explicit Environment(const Population& population,
+			Mutation<Gene>*			mutation_ptr,
+			Crossover<Gene>*			crossover_ptr,
+			Selection<SpecimenType>*	selection_ptr) : population_(population)
+		{
+			mutation_type_ = std::unique_ptr<Mutation<Gene> >(mutation_ptr);
+			crossover_type_ = std::unique_ptr<Crossover<Gene> >(crossover_ptr);
+			selection_type_ = std::unique_ptr<Selection<SpecimenType> >(selection_ptr);
+		}
+
+		explicit Environment(Population&& population,
+							 Mutation<Gene>*			mutation_ptr,
+							 Crossover<Gene>*			crossover_ptr,
+							 Selection<SpecimenType>*	selection_ptr) : population_(population)
+		{
+			mutation_type_ = std::unique_ptr<Mutation<Gene> >(mutation_ptr);
+			crossover_type_ = std::unique_ptr<Crossover<Gene> >(crossover_ptr);
+			selection_type_ = std::unique_ptr<Selection<SpecimenType> >(selection_ptr);
+		}
+
+	protected:
+		/**
+		 *	@brief	Generates new population and replaces currently held one
+		 */
+		virtual void generatePopulation(size_t population_size)
 		{
 			population_.clear();
 			population_.reserve(population_size);
@@ -161,6 +194,7 @@ namespace GA {
 			population_ = std::move(offspring_);
 		}
 
+	public:
 		/*
 		 *	@brief	Evolve by one generation
 		 *
@@ -201,7 +235,7 @@ namespace GA {
 		void runSimulation(FitnessFunction fitness, FinishCondition finishCondition, int number_of_iterations = -1) //TODO dodałbym bool ignoreFinishCondidtions = false
 		{
 			if (population_.empty())
-				setPopulation(population_.size());
+				generatePopulation(population_.size());
 			
 			evaluation(fitness);
 
@@ -220,8 +254,24 @@ namespace GA {
 		void showBest()
 		{
 			auto it = std::max_element(population_.begin(), population_.end(), [](const auto& a, const auto& b) {return a.getFitness() < b.getFitness(); });
-			auto fenotype =  (*it).getFenotype();
-			std::cout << std::string(fenotype.begin(), fenotype.end()) << "\tfitness: " << (*it).getFitness() << '\n'; //TODO dangerous population_[0]
+			auto fenotype = (*it).getFenotype();
+			std::cout << std::string(fenotype.begin(), fenotype.end()) << "\tfitness: " << (*it).getFitness() << '\n';
+		}
+
+		//	Get/set population
+		void setPopulation(const Population& population)
+		{
+			population_ = population;
+		}
+
+		void setPopulation(Population&& population)
+		{
+			population_ = population;
+		}
+
+		const Population& getPopulation() const
+		{
+			return population_;
 		}
 
 		//	For Mutations with strictly specified Gene type

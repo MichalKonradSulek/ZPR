@@ -15,6 +15,7 @@
 #define __SPECIMEN__
 
 #include <vector>
+#include <iostream>
 
 namespace GA {
 
@@ -48,18 +49,23 @@ namespace GA {
 		explicit Specimen(Genotype&& genotype) : dna_(genotype), fitness_(0.0) {}
 		virtual ~Specimen() = default;
 
-		inline Genotype& getGenotype() { return dna_; }
-
-		inline double	getFitness() const { return fitness_; }
-		inline void		setFitness(int fitness) { fitness_ = fitness; }
-
 		/*
 		 *	@brief Conversion of Genotype into Fenotype
 		 *	
 		 *	@details Define Chromosome conversion when using Chromosome different from Gene
 		 *			 otherwise just return dna_
 		 */
-		virtual Fenotype getFenotype() const = 0; // { return dna_; } //TODO usunąć komentarz
+		virtual Fenotype getFenotype() const = 0;
+
+		virtual void print() const
+		{
+			std::cout << fitness_ << '\n';
+		}
+
+		inline Genotype& getGenotype() { return dna_; }
+
+		inline double	getFitness() const { return fitness_; }
+		inline void		setFitness(int fitness) { fitness_ = fitness; }
 	};
 
 }
