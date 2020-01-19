@@ -19,7 +19,7 @@ namespace GA {
 		explicit FlipBitMutation(int mutation_chance = MUTATION_CHANCE_PERCENT, int mutation_iterations = 1, int max_mutations = 1) : MultipleMutation<bool>(mutation_chance, mutation_iterations, max_mutations) { }
 		~FlipBitMutation() override = default;
 
-		void mutateOnce(Genotype& genes) const override
+		void performMutation(Genotype& genes) const override
 		{
 			int choice = rand() % genes.size();
 
@@ -38,7 +38,7 @@ namespace GA {
 		explicit SwapGeneMutation(int mutation_chance = MUTATION_CHANCE_PERCENT, int mutation_iterations = 1, int max_mutations = 10) : MultipleMutation<GeneType>(mutation_chance, mutation_iterations, max_mutations) { }
 		~SwapGeneMutation() = default;
 
-		void mutateOnce(Genotype& genes) const override
+		void performMutation(Genotype& genes) const override
 		{
 			size_t a = rand() % genes.size();  //TODO tu też generator
 			size_t b = rand() % genes.size();
@@ -58,34 +58,6 @@ namespace GA {
 		{
 			size_t crossover_point = rand() % parentA.size(); //TODO generator
 			std::swap_ranges(parentA.begin() + crossover_point, parentA.end(), parentB.begin() + crossover_point);
-		}
-	};
-
-	template <typename SpecimenType>
-	class BestFitnessSelection : public Selection<SpecimenType>
-	{
-	public:
-		using Population = typename Selection<SpecimenType>::Population;
-
-	private:
-		int best_of_percent_;
-
-	public:
-		explicit BestFitnessSelection(int best_of_percent = 10) : best_of_percent_(best_of_percent) { }
-		~BestFitnessSelection() = default;
-
-		Population select(const Population& population, size_t mating_pool_size) override
-		{
-			Population mating_pool;
-			mating_pool.reserve(mating_pool_size);
-
-			for (size_t i = 0; i < mating_pool_size; ++i)
-			{
-				int choice = rand() % int((best_of_percent_ / 100.f) * population.size()); //TODO generator
-				mating_pool.emplace_back(population[choice]);
-			}
-
-			return mating_pool;
 		}
 	};
 

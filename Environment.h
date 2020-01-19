@@ -26,6 +26,7 @@
 #include "Selection.h"
 
 #include "Predefined.h"
+#include "Selections.h"
 #include "Exception.h"
 
 namespace GA {
@@ -78,7 +79,10 @@ namespace GA {
 		virtual void setPopulation(size_type population_size)
 		{
 			population_.clear();
-			population_.assign(population_size, SpecimenType());
+			//population_.assign(population_size, SpecimenType());
+			population_.reserve(population_size);
+			for (int i = 0; i < population_size; ++i)
+				population_.emplace_back(SpecimenType());
 		}
 
 		template <typename FitnessFunction>
@@ -154,9 +158,6 @@ namespace GA {
 		void iteration(FitnessFunction fitness) {
 			evaluation(fitness);
 
-			//	TODO: remove this line, if sorting is needed selection should perform it
-			std::sort(population_.begin(), population_.end(), [](SpecimenType& a, SpecimenType& b) {return a.getFitness() > b.getFitness(); });
-
 			selection();
 
 			crossover();
@@ -200,8 +201,10 @@ namespace GA {
 
 		void showBest()
 		{
-			auto fenotype = population_[0].getFenotype();
-			std::cout << std::string(fenotype.begin(), fenotype.end()) << "\tfitness: " << population_[0].getFitness() << '\n'; //TODO dangerous population_[0]
+			//auto fenotype = population_[0].getFenotype();
+			auto it = std::max_element(population_.begin(), population_.end(), [](const auto& a, const auto& b) {return a.getFitness() < b.getFitness(); });
+			auto fenotype =  (*it).getFenotype();
+			std::cout << std::string(fenotype.begin(), fenotype.end()) << "\tfitness: " << (*it).getFitness() << '\n'; //TODO dangerous population_[0]
 		}
 
 		SpecimenType getBest()

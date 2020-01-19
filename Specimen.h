@@ -48,8 +48,8 @@ namespace GA {
 
 		inline Genotype& getDNA() { return dna_; }
 
-		inline int  getFitness() const { return fitness_; }
-		inline void setFitness(int fitness) { fitness_ = fitness; }
+		inline double	getFitness() const { return fitness_; }
+		inline void		setFitness(int fitness) { fitness_ = fitness; }
 
 		/*
 		 *	@brief Conversion of Genotype into Fenotype

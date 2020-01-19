@@ -51,24 +51,38 @@ namespace GA {
 		int mutation_chance_;
 
 	protected:
+		/*
+		 *	@brief Condition deciding whether a mutation should occur.
+		 *
+		 *	@details By default it checks if a randomly picked number is lower
+		 *		     than mutation_chance, override this function to change
+		 *			 mutation criteria
+		 */
         virtual bool mutationCondition() const
         {
-            int chance = rand() % MAX_MUTATION_CHANCE; //TODO that should be from generator
+            int chance = rand() % MAX_MUTATION_CHANCE;
             return chance < mutation_chance_;
         }
+
+		/**
+		 *	@brief	Performs mutation
+		 *
+		 *	@note	Must be overriden
+		 */
+		virtual void performMutation(Genotype& genes) const = 0;
 
 	public:
 		explicit Mutation(int mutation_chance = MUTATION_CHANCE_PERCENT) : mutation_chance_(mutation_chance) { }
 		virtual ~Mutation() = default;
 
-		/*
-		 *	@brief Condition deciding whether a mutation should occur.
-		 *		   
-		 *	@details By default it checks if a randomly picked number is lower
-		 *		     than mutation_chance, override this function to change
-		 *			 mutation criteria
+		/**
+		 *	@brief	Checks mutation condition and if successful calls performMutation()
 		 */
-		virtual void mutate(Genotype& genes) const = 0;
+		virtual void mutate(Genotype& genes) const
+		{
+			if (mutationCondition())
+				performMutation(genes);
+		}
 
 		inline int getMutationChance() const { return mutation_chance_; }
 
@@ -92,13 +106,9 @@ namespace GA {
 	{
 	public:
 	    using Genotype = typename Mutation<GeneType>::Genotype;
-	private:
-		/*
-		 *	@brief  Equivalent of mutate() in regular Mutation
-		 *
-		 *	@note	Must be overriden  
-		 */
-		virtual void mutateOnce(Genotype& genes) const = 0;
+
+	protected:
+		virtual void performMutation(Genotype& genes) const = 0;
 
 	protected:
 		int max_mutations_;
@@ -125,7 +135,7 @@ namespace GA {
 			if (max_mutations_ == -1)
 			{
 				for (int i = 0; i < mutation_iterations_; ++i)
-					mutateOnce(genes);
+					performMutation(genes);
 			}
 			else
 			{
@@ -133,7 +143,7 @@ namespace GA {
 				{
 					if (Mutation<GeneType>::mutationCondition())
 					{
-						mutateOnce(genes);
+						performMutation(genes);
 						++mutations_occured;
 					}
 				}
