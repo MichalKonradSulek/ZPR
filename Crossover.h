@@ -1,4 +1,4 @@
-/*
+/**
  *	Class representing one of genetic operators - crossover
  *	It is one of key features that allow the whole population
  *	to evolve. It is achieved by mixing partents DNA and 
@@ -19,7 +19,7 @@
 
 namespace GA {
 
-	/*
+	/**
 	 *	@brief Base class representing crossover of two individuals
 	 *
 	 *	@details Abstract class defining interface for Crossover
@@ -42,7 +42,7 @@ namespace GA {
 		using Gene = GeneType;
 		using Genotype = std::vector<Gene>;
 
-		/*
+		/**
 		 *	@brief	Function defining crossover method
 		 *
 		 *	@note	This method has to be overriden

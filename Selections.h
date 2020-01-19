@@ -41,17 +41,18 @@ namespace GA {
 
 		Population select(const Population& population, size_t mating_pool_size) override
 		{
+		    if(population.empty()) return Population();
 			Population mating_pool;
 			mating_pool.reserve(mating_pool_size);
 
 			Population pop = population;
 
-			std::sort(pop.begin(), pop.end(), [](const auto& a, const auto& b) { return a.getFitness() < b.getFitness(); });
+			std::sort(pop.begin(), pop.end(), [](const auto& a, const auto& b) { return a.getFitness() > b.getFitness(); });
 
 			for (size_t i = 0; i < mating_pool_size; ++i)
 			{
 				int choice = rand() % int((best_of_percent_ / 100.f) * population.size());
-				mating_pool.emplace_back(population[choice]);
+				mating_pool.emplace_back(pop[choice]);
 			}
 
 			return mating_pool;

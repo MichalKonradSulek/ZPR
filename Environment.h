@@ -1,4 +1,4 @@
-/*
+/**
  *  Class defining environment for genetic algorithm. After setting up
  *  environment settings one function performs whole algorithm with
  *  specified loop (generation happens only once at the beginning):
@@ -33,7 +33,7 @@
 
 namespace GA {
 
-	/*
+	/**
 	 *	@brief	An environment defining population and specified genetic operators
 	 *
 	 *	@details This class sets all genetic operators, selection strategy and generates
@@ -140,7 +140,7 @@ namespace GA {
 				member.setFitness(fitness(member));
 		}
 
-		/*
+		/**
 		 *	@brief  Selection routine, can be overriden to change selection behaviour
 		 *	
 		 *	@details By default this function performs selection of population based on selection_type_
@@ -153,7 +153,7 @@ namespace GA {
 			mating_pool_ = selection_type_->select(population_, population_.size());
 		}
 
-		/*
+		/**
 		 *	@brief	Crossover routine, can be overriden to change crossover behavior
 		 *
 		 *	@details By default it crosses adjacent members (they are randomly placed by selection)
@@ -169,7 +169,7 @@ namespace GA {
 			offspring_ = std::move(mating_pool_);
 		}
 
-		/*
+		/**
 		 *	@brief	Mutation routine, can be overriden to change mutation behaviour
 		 *
 		 *	@details By default it mutates every indivudual using mutation_type_
@@ -182,7 +182,7 @@ namespace GA {
 				mutation_type_->mutate(individual.getGenotype());
 		}
 
-		/*
+		/**
 		 *	@brief	Reproduction routine, can be overriden to change reproduction behavior
 		 *
 		 *	@details By default it moves an offspring_ into population_
@@ -195,7 +195,7 @@ namespace GA {
 		}
 
 	public:
-		/*
+		/**
 		 *	@brief	Evolve by one generation
 		 *
 		 *	@details Performs one cycle of evolution with given FitnessFunction and FinishCondition
@@ -220,7 +220,7 @@ namespace GA {
 				getBest().print();
 		}
 
-		/*
+		/**
 		 *	@brief	Perform evolution with given number of generation steps
 		 *
 		 *	@details Performs genetic algorithm with specified FitnessFunction and
