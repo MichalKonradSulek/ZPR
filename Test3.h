@@ -23,6 +23,12 @@ public:
 	{
 		return dna_;
 	}
+
+	void print() const
+	{
+		auto fenotype = getFenotype();
+		std::cout << std::string(fenotype.begin(), fenotype.end()) << "\tfitness: " << getFitness() << '\n';
+	}
 };
 
 class CharMutation : public GA::MultipleMutation<char>

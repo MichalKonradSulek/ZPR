@@ -1,4 +1,4 @@
-/*
+/**
  *	Class representing one of genetic operators - mutation
  *	It is used to maintain diversity within population by
  *	randomly changing parts of DNA of a member and therefore
@@ -23,7 +23,7 @@ namespace GA {
 	const int MAX_MUTATION_CHANCE		= 100000;
 	const int MUTATION_CHANCE_PERCENT	= MAX_MUTATION_CHANCE / 100;
 
-	/*
+	/**
 	 *	@brief Base class representing mutation of Genotype
 	 *
 	 *	@details Mutation of Genotype occurs trough mutate() function
@@ -51,7 +51,7 @@ namespace GA {
 		int mutation_chance_;
 
 	protected:
-		/*
+		/**
 		 *	@brief Condition deciding whether a mutation should occur.
 		 *
 		 *	@details By default it checks if a randomly picked number is lower
@@ -86,13 +86,13 @@ namespace GA {
 
 		inline int getMutationChance() const { return mutation_chance_; }
 
-		/*
+		/**
 		 *	@brief Use MUTATION_CHANCE_PERCENT to define percentage of mutation chance
 		 */
 		inline void setMutationChance(int mutation_chance) { mutation_chance_ = mutation_chance; }
 	};
 
-	/*
+	/**
 	 *	@brief	Helper class allowing mutations to occur more than once on
 	 *			specified Genotype
 	 *
@@ -115,7 +115,7 @@ namespace GA {
 		int mutation_iterations_;
 
 	public:
-		/*
+		/**
 		 *	@brief	Define conditions for multiple mutation
 		 *
 		 *	@details Set max_mutations to -1 to allow for unlimited number of mutations
@@ -127,7 +127,7 @@ namespace GA {
 		explicit MultipleMutation(int mutation_chance = MUTATION_CHANCE_PERCENT, int mutation_iterations = 1, int max_mutations = -1) : Mutation<GeneType>(mutation_chance), mutation_iterations_(mutation_iterations), max_mutations_(max_mutations) { }
 		~MultipleMutation() = default;
 
-		/*
+		/**
 		 *	@brief	Specifies criteria of multiple mutations
 		 */
 		void mutate(Genotype& genes) const override

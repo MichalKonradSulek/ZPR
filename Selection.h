@@ -16,7 +16,7 @@
 
 namespace GA {
 
-	/*
+	/**
 	 *	@brief	Base class representing selection of most fitting individuals
 	 *
 	 *	@details Abstract class defining Interface for selecting a mating pool
@@ -38,7 +38,7 @@ namespace GA {
 		using Member = SpecimenType;
 		using Population = std::vector<SpecimenType>;
 
-		/*
+		/**
 		 *	@brief	A strategy for picking individuals for mating pool
 		 *
 		 *	@details This function takes a population and generates new mating pool

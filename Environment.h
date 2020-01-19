@@ -1,4 +1,4 @@
-/*
+/**
  *  Class defining environment for genetic algorithm. After setting up
  *  environment settings one function performs whole algorithm with
  *  specified loop (generation happens only once at the beginning):
@@ -33,7 +33,7 @@
 
 namespace GA {
 
-	/*
+	/**
 	 *	@brief	An environment defining population and specified genetic operators
 	 *
 	 *	@details This class sets all genetic operators, selection strategy and generates
@@ -53,32 +53,79 @@ namespace GA {
 	public:
 		using size_type = size_t;
 
-		using Gene = typename SpecimenType::Gene;
-		using Chromosome = typename SpecimenType::Chromosome;
-		using Genotype = std::vector<Gene>;
-		using Fenotype = std::vector<Chromosome>;
+		using Gene			= typename SpecimenType::Gene;
+		using Chromosome	= typename SpecimenType::Chromosome;
+		using Genotype		= std::vector<Gene>;
+		using Fenotype		= std::vector<Chromosome>;
+
+		using Population	= std::vector<SpecimenType>;
 
 	protected:
-		std::vector<SpecimenType> population_;
+		Population population_;
 
-		std::vector<SpecimenType> mating_pool_;
-		std::vector<SpecimenType> offspring_;
+		Population mating_pool_;
+		Population offspring_;
 
 		std::unique_ptr<Mutation<Gene>>				mutation_type_;
 		std::unique_ptr<Crossover<Gene>>			crossover_type_;
 		std::unique_ptr<Selection<SpecimenType>>	selection_type_;
 
-	public:
-		explicit Environment(int population_size)
+	private:
+		void setDefaults()
 		{
-			population_.resize(population_size);
-
-			mutation_type_ = std::make_unique<SwapGeneMutation<Gene> >(); //TODO dodałbym do argumentów pointery na wszystkie rzeczy z ustawionym domyślnym new ...
+			mutation_type_ = std::make_unique<SwapGeneMutation<Gene> >();
 			crossover_type_ = std::make_unique<SinglePointCrossover<Gene> >();
 			selection_type_ = std::make_unique<RouletteWheelSelection<SpecimenType> >();
 		}
 
-		virtual void setPopulation(size_type population_size)
+	public:
+		explicit Environment(size_type population_size = 0)
+		{
+			generatePopulation(population_size);
+
+			setDefaults();
+		}
+
+		explicit Environment(const Population& population) : population_(population) { setDefaults(); }
+		explicit Environment(Population&& population) :		 population_(population) { setDefaults(); }
+
+		explicit Environment(size_type					population_size,
+							 Mutation<Gene>*			mutation_ptr,
+							 Crossover<Gene>*			crossover_ptr,
+							 Selection<SpecimenType>*	selection_ptr)
+		{
+			generatePopulation(population_size);
+
+			mutation_type_ = std::unique_ptr<Mutation<Gene> >(mutation_ptr);
+			crossover_type_ = std::unique_ptr<Crossover<Gene> >(crossover_ptr);
+			selection_type_ = std::unique_ptr<Selection<SpecimenType> >(selection_ptr);
+		}
+
+		explicit Environment(const Population& population,
+			Mutation<Gene>*			mutation_ptr,
+			Crossover<Gene>*			crossover_ptr,
+			Selection<SpecimenType>*	selection_ptr) : population_(population)
+		{
+			mutation_type_ = std::unique_ptr<Mutation<Gene> >(mutation_ptr);
+			crossover_type_ = std::unique_ptr<Crossover<Gene> >(crossover_ptr);
+			selection_type_ = std::unique_ptr<Selection<SpecimenType> >(selection_ptr);
+		}
+
+		explicit Environment(Population&& population,
+							 Mutation<Gene>*			mutation_ptr,
+							 Crossover<Gene>*			crossover_ptr,
+							 Selection<SpecimenType>*	selection_ptr) : population_(population)
+		{
+			mutation_type_ = std::unique_ptr<Mutation<Gene> >(mutation_ptr);
+			crossover_type_ = std::unique_ptr<Crossover<Gene> >(crossover_ptr);
+			selection_type_ = std::unique_ptr<Selection<SpecimenType> >(selection_ptr);
+		}
+
+	protected:
+		/**
+		 *	@brief	Generates new population and replaces currently held one
+		 */
+		virtual void generatePopulation(size_t population_size)
 		{
 			population_.clear();
 			population_.reserve(population_size);
@@ -93,7 +140,7 @@ namespace GA {
 				member.setFitness(fitness(member));
 		}
 
-		/*
+		/**
 		 *	@brief  Selection routine, can be overriden to change selection behaviour
 		 *	
 		 *	@details By default this function performs selection of population based on selection_type_
@@ -106,7 +153,7 @@ namespace GA {
 			mating_pool_ = selection_type_->select(population_, population_.size());
 		}
 
-		/*
+		/**
 		 *	@brief	Crossover routine, can be overriden to change crossover behavior
 		 *
 		 *	@details By default it crosses adjacent members (they are randomly placed by selection)
@@ -122,7 +169,7 @@ namespace GA {
 			offspring_ = std::move(mating_pool_);
 		}
 
-		/*
+		/**
 		 *	@brief	Mutation routine, can be overriden to change mutation behaviour
 		 *
 		 *	@details By default it mutates every indivudual using mutation_type_
@@ -135,7 +182,7 @@ namespace GA {
 				mutation_type_->mutate(individual.getGenotype());
 		}
 
-		/*
+		/**
 		 *	@brief	Reproduction routine, can be overriden to change reproduction behavior
 		 *
 		 *	@details By default it moves an offspring_ into population_
@@ -147,16 +194,19 @@ namespace GA {
 			population_ = std::move(offspring_);
 		}
 
-		/*
+	public:
+		/**
 		 *	@brief	Evolve by one generation
 		 *
 		 *	@details Performs one cycle of evolution with given FitnessFunction and FinishCondition
 		 *
 		 *	@tparam	FitnessFunction	Functor object taking SpecimenType as an argument and returning
 		 *			it's fitness value converted to double
+		 *
+		 *	@param	show_best			 Calls print() on best individual of generation
 		 */
 		template <typename FitnessFunction>
-		void iteration(FitnessFunction fitness) {
+		void iteration(FitnessFunction fitness, bool show_best = true) {
 			selection();
 
 			crossover();
@@ -166,10 +216,11 @@ namespace GA {
 
 			evaluation(fitness);
 
-			showBest();		//	TODO: remove
+			if (show_best)
+				getBest().print();
 		}
 
-		/*
+		/**
 		 *	@brief	Perform evolution with given number of generation steps
 		 *
 		 *	@details Performs genetic algorithm with specified FitnessFunction and
@@ -182,30 +233,48 @@ namespace GA {
 		 *
 		 *	@param	number_of_iterations Specifies a number of generations steps, set to -1 to
 		 *			perform evolution until FinishCondition is met
+		 *	@param	show_best			 Calls print() on best individual of generation
 		 */
 		template <typename FitnessFunction, typename FinishCondition>
-		void runSimulation(FitnessFunction fitness, FinishCondition finishCondition, int number_of_iterations = -1) //TODO dodałbym bool ignoreFinishCondidtions = false
+		void runSimulation(FitnessFunction fitness, FinishCondition finishCondition, int number_of_iterations = -1, bool show_best = true) //TODO dodałbym bool ignoreFinishCondidtions = false
 		{
-			setPopulation(population_.size());
+			if (population_.empty())
+				generatePopulation(population_.size());
+			
 			evaluation(fitness);
 
 			if (number_of_iterations == -1)
 			{
 				while (!finishCondition(population_, fitness))
-					iteration(fitness);
+					iteration(fitness, show_best);
 			}
 			else
 			{
 				while (!finishCondition(population_, fitness) && --number_of_iterations >= 0)
-					iteration(fitness);
+					iteration(fitness, show_best);
 			}
 		}
 
-		void showBest()
+		SpecimenType& getBest()
 		{
 			auto it = std::max_element(population_.begin(), population_.end(), [](const auto& a, const auto& b) {return a.getFitness() < b.getFitness(); });
-			auto fenotype =  (*it).getFenotype();
-			std::cout << std::string(fenotype.begin(), fenotype.end()) << "\tfitness: " << (*it).getFitness() << '\n'; //TODO dangerous population_[0]
+			return *it;
+		}
+
+		//	Get/set population
+		void setPopulation(const Population& population)
+		{
+			population_ = population;
+		}
+
+		void setPopulation(Population&& population)
+		{
+			population_ = population;
+		}
+
+		const Population& getPopulation() const
+		{
+			return population_;
 		}
 
 		//	For Mutations with strictly specified Gene type

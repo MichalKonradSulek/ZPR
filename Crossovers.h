@@ -1,4 +1,4 @@
-/*
+/**
  *  Set of predefined crossover strategies for genetic algorithms
  *
  *  Authors: Michal Swiatek, Michal Sulek
@@ -33,7 +33,7 @@ namespace GA {
 
 		void cross(Genotype& parentA, Genotype& parentB) override
 		{
-			size_t crossover_point = rand() % parentA.size(); //TODO generator
+			size_t crossover_point = rand() % parentA.size();
 			std::swap_ranges(parentA.begin() + crossover_point, parentA.end(), parentB.begin() + crossover_point);
 		}
 	};
