@@ -26,6 +26,7 @@
 #include "Selection.h"
 
 #include "Predefined.h"
+#include "Exception.h"
 
 namespace GA {
 
@@ -205,7 +206,7 @@ namespace GA {
 
 		SpecimenType getBest()
 		{
-			if (!population_.size())	throw std::exception("Population vector is empty!"); //TODO implement exceptionsS
+			if (!population_.size())	throw Exception("Population vector is empty!");
 			return population_[0];
 		}
 

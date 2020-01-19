@@ -16,6 +16,8 @@
 #include <cstdlib>
 #include <vector>
 
+#include "Exception.h"
+
 namespace GA {
 
 	const int MAX_MUTATION_CHANCE		= 100000;
