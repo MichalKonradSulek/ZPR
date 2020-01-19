@@ -26,6 +26,7 @@
 #include "Selection.h"
 
 #include "Predefined.h"
+#include "Selections.h"
 
 namespace GA {
 
