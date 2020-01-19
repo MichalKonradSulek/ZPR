@@ -13,9 +13,6 @@ int main()
 {
     srand(time(nullptr));
 
-    MyEnvironment  env1(10000);
-	GA::Environment<MySpecimen3>  env3(10000);
-
 	auto finishCondition1 = [](const auto& population, auto fitness)
 	{
 		auto it = std::max_element(population.begin(), population.end(), [](const auto& a, const auto& b) {return a.getFitness() < b.getFitness(); });
@@ -37,9 +34,10 @@ int main()
 		return result;
 	};
 
-	//.setMutationType<GA::SwapGeneMutation<bool> >(7, GA::MUTATION_CHANCE_PERCENT * 0.05, str1.length());
-	//env1.setMutationType<GA::ScrambleGenesMutation<bool> >(7, GA::MUTATION_CHANCE_PERCENT * 0.05);
-	env1.setMutationType<GA::SwapGeneMutation>(7, GA::MUTATION_CHANCE_PERCENT * 0.05);
+	MyEnvironment  env1(10000);
+
+	env1.setMutationType<GA::FlipBitMutation>(GA::MUTATION_CHANCE_PERCENT * 0.05, 100, 5);
+	env1.setCrossoverType<GA::SinglePointCrossover>();
 	env1.setSelectionType<GA::RankSelection>();
 
     env1.runSimulation(fitness1, finishCondition1);
@@ -65,18 +63,9 @@ int main()
 		return str3 == std::string(fenotype.begin(), fenotype.end());
 	};
 
-	env3.setMutationType<CharMutation>(GA::MUTATION_CHANCE_PERCENT * 0.5, 10);
-	//env3.setMutationType<GA::SwapGeneMutation>(5, GA::MUTATION_CHANCE_PERCENT);
-	
-	env3.setSelectionType<GA::RankSelection>();
-
-	env3.setCrossoverType<GA::UniformCrossover>();
-	//env3.setCrossoverType<GA::MultiplePointCrossover>(5);
-	//env3.setCrossoverType<GA::SinglePointCrossover>();
+	GA::Environment<MySpecimen3>  env3(10000, new CharMutation(GA::MUTATION_CHANCE_PERCENT * 0.01, 10), new GA::UniformCrossover<char>(), new GA::RouletteWheelSelection<MySpecimen3>());
 
 	env3.runSimulation(fitness3, finishCondition3);
-
-	//env3.showBest();
 
     std::cout << "\n\n\n";
 

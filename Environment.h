@@ -53,29 +53,43 @@ namespace GA {
 	public:
 		using size_type = size_t;
 
-		using Gene = typename SpecimenType::Gene;
-		using Chromosome = typename SpecimenType::Chromosome;
-		using Genotype = std::vector<Gene>;
-		using Fenotype = std::vector<Chromosome>;
+		using Gene			= typename SpecimenType::Gene;
+		using Chromosome	= typename SpecimenType::Chromosome;
+		using Genotype		= std::vector<Gene>;
+		using Fenotype		= std::vector<Chromosome>;
+
+		using Population	= std::vector<SpecimenType>;
 
 	protected:
-		std::vector<SpecimenType> population_;
+		Population population_;
 
-		std::vector<SpecimenType> mating_pool_;
-		std::vector<SpecimenType> offspring_;
+		Population mating_pool_;
+		Population offspring_;
 
 		std::unique_ptr<Mutation<Gene>>				mutation_type_;
 		std::unique_ptr<Crossover<Gene>>			crossover_type_;
 		std::unique_ptr<Selection<SpecimenType>>	selection_type_;
 
 	public:
-		explicit Environment(int population_size)
+		explicit Environment(size_type population_size = 0)
 		{
-			population_.resize(population_size);
+			setPopulation(population_size);
 
-			mutation_type_ = std::make_unique<SwapGeneMutation<Gene> >(); //TODO dodałbym do argumentów pointery na wszystkie rzeczy z ustawionym domyślnym new ...
+			mutation_type_ = std::make_unique<SwapGeneMutation<Gene> >();
 			crossover_type_ = std::make_unique<SinglePointCrossover<Gene> >();
 			selection_type_ = std::make_unique<RouletteWheelSelection<SpecimenType> >();
+		}
+
+		explicit Environment(size_type					population_size,
+							 Mutation<Gene>*			mutation_ptr,
+							 Crossover<Gene>*			crossover_ptr,
+							 Selection<SpecimenType>*	selection_ptr)
+		{
+			setPopulation(population_size);
+
+			mutation_type_ = std::unique_ptr<Mutation<Gene> >(mutation_ptr);
+			crossover_type_ = std::unique_ptr<Crossover<Gene> >(crossover_ptr);
+			selection_type_ = std::unique_ptr<Selection<SpecimenType> >(selection_ptr);
 		}
 
 		virtual void setPopulation(size_type population_size)
@@ -186,7 +200,9 @@ namespace GA {
 		template <typename FitnessFunction, typename FinishCondition>
 		void runSimulation(FitnessFunction fitness, FinishCondition finishCondition, int number_of_iterations = -1) //TODO dodałbym bool ignoreFinishCondidtions = false
 		{
-			setPopulation(population_.size());
+			if (population_.empty())
+				setPopulation(population_.size());
+			
 			evaluation(fitness);
 
 			if (number_of_iterations == -1)

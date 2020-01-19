@@ -45,6 +45,7 @@ namespace GA {
 	public:
 		Specimen() : fitness_(0.0) { }
 		explicit Specimen(const Genotype& genotype) : dna_(genotype), fitness_(0.0) {}
+		explicit Specimen(Genotype&& genotype) : dna_(genotype), fitness_(0.0) {}
 		virtual ~Specimen() = default;
 
 		inline Genotype& getGenotype() { return dna_; }
