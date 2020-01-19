@@ -21,11 +21,11 @@ namespace GA {
 	/**
 	 *	@brief Class defining single member of population
 	 *
-	 *	@tparam GeneType		Used to build DNA of Specimen
-	 *	@tparam ChromosomeType	Used to evaluate Specimen trough fitness function
-	 *
 	 *	@details Specimen represents genetic data used to determine environmental
 	 *			 fitness of a member
+	 *
+	 *	@tparam GeneType		Used to build DNA of Specimen
+	 *	@tparam ChromosomeType	Used to evaluate Specimen trough fitness function
 	 */
 	template <typename GeneType, typename ChromosomeType>
 	class Specimen
@@ -51,6 +51,12 @@ namespace GA {
 		inline int  getFitness() const { return fitness_; }
 		inline void setFitness(int fitness) { fitness_ = fitness; }
 
+		/*
+		 *	@brief Conversion of Genotype into Fenotype
+		 *	
+		 *	@details Define Chromosome conversion when using Chromosome different from Gene
+		 *			 otherwise just return dna_
+		 */
 		virtual Fenotype getFenotype() const = 0; // { return dna_; } //TODO usunąć komentarz
 	};
 

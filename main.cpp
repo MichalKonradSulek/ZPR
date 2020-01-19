@@ -31,7 +31,7 @@ int main()
 	env1.setMutationType<GA::FlipBitMutation>(10, GENES_PER_CHROMOSOME * str1.length());
 	env1.setSelectionType<GA::BestFitnessSelection<MySpecimen> >(5);
 
-    env1.runSimulation(fitness1, 100);
+    //env1.runSimulation(fitness1, 100);
 
 	auto fitness3 = [](const MySpecimen3& specimen)
 	{
@@ -49,9 +49,9 @@ int main()
 		return result;
 	};
 
-	env3.setMutationType<CharMutation>(50, str3.length());
+	env3.setMutationType<CharMutation>(GA::MUTATION_CHANCE_PERCENT * 0.5, 20);
 
-	env3.runSimulation(fitness3, 30);
+	env3.runSimulation(fitness3, 100);
 
     std::cout << "\n\n\n";
 

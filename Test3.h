@@ -28,21 +28,14 @@ public:
 class CharMutation : public GA::MultipleMutation<char>
 {
 public:
-	CharMutation(int mutation_chance = 10, int max_mutations = 1) : MultipleMutation<char>(mutation_chance, max_mutations) { }
+	CharMutation(int mutation_chance = GA::MUTATION_CHANCE_PERCENT, int max_mutations = 1) : MultipleMutation<char>(mutation_chance, 40, max_mutations) { }
 	~CharMutation() = default;
 
-	void mutate(Genotype& genes) const override
+	void mutateOnce(Genotype& genes) const override
 	{
-		int mutations_occured = 0;
+		int choice = rand() % genes.size();
 
-		for (auto& gene : genes)
-		{
-			if (mutationCondition())
-				gene = rand() % 96 + 32, ++mutations_occured;
-
-			if (mutations_occured >= max_mutations_)
-				return;
-		}
+		genes[choice] = rand() % 96 + 32;
 	}
 };
 

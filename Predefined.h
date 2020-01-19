@@ -9,57 +9,41 @@
 
 namespace GA {
 
-	class FlipBitMutation : public Mutation<bool>
+	class FlipBitMutation : public MultipleMutation<bool>
 	{
 	public:
 		using Gene = typename Mutation<bool>::Gene;
 		using Genotype = typename Mutation<bool>::Genotype;
 
-	private:
-		int max_mutations_;
-
 	public:
-		explicit FlipBitMutation(int mutation_chance = 10, int max_mutations = 1) : Mutation<bool>(mutation_chance), max_mutations_(max_mutations) { }
+		explicit FlipBitMutation(int mutation_chance = MUTATION_CHANCE_PERCENT, int max_mutations = 1) : MultipleMutation<bool>(mutation_chance, 100, max_mutations) { }
 		~FlipBitMutation() override = default;
 
-		void mutate(Genotype& genes) const override
+		void mutateOnce(Genotype& genes) const override
 		{
-			int mutations_occured = 0;
+			int choice = rand() % genes.size();
 
-			for (auto&& gene : genes) //TODO częściej mutują geny o mniejszych indeksach
-			{
-				if (mutationCondition())
-					gene = !gene, ++mutations_occured;
-
-				if (mutations_occured == max_mutations_)
-					return;
-			}
+			genes[choice] = !genes[choice];
 		}
 	};
 
 	template <typename GeneType>
-	class SwapGeneMutation : public Mutation<GeneType>
+	class SwapGeneMutation : public MultipleMutation<GeneType>
 	{
 	public:
 		using Gene = typename Mutation<GeneType>::Gene;
 		using Genotype = typename Mutation<GeneType>::Genotype;
 
-	private:
-		int max_mutations_;
-
 	public:
-		explicit SwapGeneMutation(int mutation_chance = 10, int max_mutations = 10) : Mutation<GeneType>(mutation_chance), max_mutations_(max_mutations) { }
+		explicit SwapGeneMutation(int mutation_chance = MUTATION_CHANCE_PERCENT, int max_mutations = 10) : MultipleMutation<GeneType>(mutation_chance, 100, max_mutations) { }
 		~SwapGeneMutation() = default;
 
-		void mutate(Genotype& genes) const override
+		void mutateOnce(Genotype& genes) const override
 		{
-			for (int i = 0; i < max_mutations_; ++i)
-			{
-				size_t a = rand() % genes.size();  //TODO tu też generator
-				size_t b = rand() % genes.size();
+			size_t a = rand() % genes.size();  //TODO tu też generator
+			size_t b = rand() % genes.size();
 
-				std::swap(genes[a], genes[b]);
-			}
+			std::swap(genes[a], genes[b]);
 		}
 	};
 

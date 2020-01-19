@@ -5,7 +5,7 @@
  *      generate -> evaluate -> selection -> genetic_operators -> succession
  *
  *  Authors: Michal Swiatek, Michal Sulek
- *	Update:	 18.01.2020
+ *	Update:	 19.01.2020
  *
  *	Github repository: https://github.com/MichalKonradSulek/ZPR
  */
@@ -29,6 +29,20 @@
 
 namespace GA {
 
+	/*
+	 *	@brief	An environment defining population and specified genetic operators
+	 *
+	 *	@details This class sets all genetic operators, selection strategy and generates
+	 *			 population of Specimens. It then performs a standard genetic algorithm
+	 *			 using specified fitness function and finish condition.
+	 *
+	 *	@tparam	SpecimenType Type of a member of population
+	 *
+	 *	@see	Specimen
+	 *	@see	Mutation
+	 *	@see	Crossover
+	 *	@see	Selection
+	 */
 	template <typename SpecimenType>
 	class Environment
 	{
@@ -39,9 +53,6 @@ namespace GA {
 		using Chromosome = typename SpecimenType::Chromosome;
 		using Genotype = std::vector<Gene>;
 		using Fenotype = std::vector<Chromosome>;
-
-	private:
-		size_type population_size_; //TODO Why private? właściwie po co nam to?
 
 	protected:
 		std::vector<SpecimenType> population_;
@@ -59,8 +70,10 @@ namespace GA {
 		}
 
 	public:
-		explicit Environment(int population_size) : population_size_(population_size)
+		explicit Environment(int population_size)
 		{
+			population_.resize(population_size);
+
 			mutation_type_ = std::make_unique<SwapGeneMutation<Gene> >(); //TODO dodałbym do argumentów pointery na wszystkie rzeczy z ustawionym domyślnym new ...
 			crossover_type_ = std::make_unique<SinglePointCrossover<Gene> >();
 			selection_type_ = std::make_unique<BestFitnessSelection<SpecimenType> >();
@@ -79,30 +92,68 @@ namespace GA {
 				member.setFitness(fitness(member));
 		}
 
+		/*
+		 *	@brief  Selection routine, can be overriden to change selection behaviour
+		 *	
+		 *	@details By default this function performs selection of population based on selection_type_
+		 *
+		 *	@note	This function has to generate and assign new mating_pool_
+		 *	@note	During this function call current population_ is already evaluated
+		 */
 		virtual void selection()
 		{
-			mating_pool_ = selection_type_->select(population_, population_size_);
+			mating_pool_ = selection_type_->select(population_, population_.size());
 		}
 
+		/*
+		 *	@brief	Crossover routine, can be overriden to change crossover behavior
+		 *
+		 *	@details By default it crosses adjacent members (they are randomly placed by selection)
+		 *			 using crossover_type_
+		 *
+		 *	@note	This function has to assign new offspring_
+		 */
 		virtual void crossover()
 		{
-			for (size_t i = 0; i < mating_pool_.size() - 1; i += 2) //TODO przemycone założenie, że populacja parzysta
+			for (size_t i = 0; i < mating_pool_.size() - 1; i += 2)
 				crossover_type_->cross(mating_pool_[i].getDNA(), mating_pool_[i + 1].getDNA());
 
 			offspring_ = std::move(mating_pool_);
 		}
 
+		/*
+		 *	@brief	Mutation routine, can be overriden to change mutation behaviour
+		 *
+		 *	@details By default it mutates every indivudual using mutation_type_
+		 *
+		 *	@note	Mutation should be performed on offspring_
+		 */
 		virtual void mutation()
 		{
 			for (auto& individual : offspring_)
 				mutation_type_->mutate(individual.getDNA());
 		}
 
+		/*
+		 *	@brief	Reproduction routine, can be overriden to change reproduction behavior
+		 *
+		 *	@details By default it moves an offspring_ into population_
+		 *
+		 *	@note	This function has to assign new population_
+		 */
 		virtual void reproduction()
 		{
 			population_ = std::move(offspring_);
 		}
 
+		/*
+		 *	@brief	Evolve by one generation
+		 *
+		 *	@details Performs one cycle of evolution with given FitnessFunction and FinishCondition
+		 *
+		 *	@tparam	FitnessFunction	Functor object taking SpecimenType as an argument and returning
+		 *			it's fitness value converted to double
+		 */
 		template <typename FitnessFunction>
 		void iteration(FitnessFunction fitness) {
 			evaluation(fitness);
@@ -120,10 +171,22 @@ namespace GA {
 			showBest();		//	TODO: remove
 		}
 
+		/*
+		 *	@brief	Perform evolution with given number of generation steps
+		 *
+		 *	@details Performs genetic algorithm with specified FitnessFunction and
+		 *			 FinishCondition.
+		 *
+		 *	@tparam FitnessFunction	Functor object taking SpecimenType as an argument and returning
+		 *			it's fitness value converted to double
+		 *
+		 *	@param	number_of_iterations Specifies a number of generations steps, set to -1 to
+		 *			perform evolution until FinishCondition is met
+		 */
 		template <typename FitnessFunction>
 		void runSimulation(FitnessFunction fitness, int number_of_iterations = -1) //TODO dodałbym bool ignoreFinishCondidtions = false
 		{
-			setPopulation(population_size_);
+			setPopulation(population_.size());
 
 			if (number_of_iterations == -1)
 			{
