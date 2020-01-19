@@ -1,13 +1,13 @@
 #ifndef __TEST2__
 #define __TEST2__
 
-#include "Member.h"
+#include "Specimen.h"
 #include "Mutation.h"
 #include "Environment.h"
 
 std::string str2 = "It's an another string that I'm trying to evolve!";
 
-class MySpecimen2 : public Specimen<char, std::string>
+class MySpecimen2 : public Specimen<char, char>
 {
 private:
     int mate; //TODO shouldn't mate be an iterator?
@@ -16,10 +16,12 @@ private:
 public:
     MySpecimen2() : generations(0)
     {
-        DNA.resize(str2.size());
-        for (auto& c : DNA)
+        dna_.resize(str2.size());
+        for (auto& c : dna_)
             c = rand() % 96 + 32;
     }
+
+	ChromosomeContainer getFenotype() const { return dna_; }
 
     void setMate(int mate, int generations)
     {
@@ -33,53 +35,48 @@ public:
     inline void deacreaseGeneration() { generations--; }
 };
 
-class MyEnvironment2 : public Environment<MySpecimen2>
+class MyFitness2 : public Fitness<MySpecimen2>
 {
-private:
-    double fitness(MySpecimen2& member)
+public:
+    double rateSpecimen (const Subject& specimen, const std::vector<Subject>& population) const override
     {
-        int result = 0;
-        const auto& DNA = member.getDNA();
-        for (int i = 0; i < str2.size(); i++)
+        double result = 0;
+        const auto& DNA = specimen.getFenotype();
+        for (size_t i = 0; i < str2.size(); i++)
         {
             if (DNA[i] == str2[i])
                 result += 10;
         }
-
-        const auto& DNA2 = population[member.getMate()].getDNA();
-        for (int i = 0; i < str2.size(); i++)
-        {
-            if (DNA2[i] == str2[i])
-                result += 10;
-        }
-
-        member.deacreaseGeneration();
-
-        return static_cast<double>(result);
+        return result;
     }
+};
 
+class MyEnvironment2 : public Environment<MySpecimen2>
+{
+private:
     inline bool finishCondition() final
     {
-        for (int i = 0; i < population.size() - 1; i += 2)
+        for (size_t i = 0; i < population_.size() - 1; i += 2)
         {
-            if (population[i].generationsLeft() <= 0)
+            if (population_[i].generationsLeft() <= 0)
             {
-                population[i].setMate(i + 1, 7);
-                population[i + 1].setMate(i, 7);
+                population_[i].setMate(i + 1, 7);
+                population_[i + 1].setMate(i, 7);
             }
         }
 
-        return population[0].getDNA() == str2;
+		auto fenotype = population_[0].getFenotype();
+		return str1 == std::string(fenotype.begin(), fenotype.end());
     }
 
     void setPopulation()
     {
         Environment<MySpecimen2>::setPopulation();
 
-        for (int i = 0; i < population.size() - 1; i += 2)
+        for (size_t i = 0; i < population_.size() - 1; i += 2)
         {
-            population[i].setMate(i + 1, 5);
-            population[i + 1].setMate(i, 5);
+            population_[i].setMate(i + 1, 5);
+            population_[i + 1].setMate(i, 5);
         }
     }
 
