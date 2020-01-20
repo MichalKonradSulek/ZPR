@@ -10,12 +10,12 @@
 #ifndef __MUTATIONS__
 #define __MUTATIONS__
 
-#include "Mutation.h"
+#include "mutation.hpp"
 
 #include <cstdlib>
 #include <algorithm>
 
-namespace GA {
+namespace ga {
 
 	/**
 	 *	@brief	Mutation strategy aimed specifically for boolean Gene type

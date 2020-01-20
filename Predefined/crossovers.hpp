@@ -14,9 +14,9 @@
 #include <cstdlib>
 #include <algorithm>
 
-#include "Crossover.h"
+#include "crossover.hpp"
 
-namespace GA {
+namespace ga {
 
 	/**
 	 *	@brief	Crossover strategy with only one crossover point
@@ -93,6 +93,19 @@ namespace GA {
 				if (rand() % 2 == 0)
 					std::swap(parentA[i], parentB[i]);
 			}
+		}
+	};
+
+	template <typename GeneType>
+	class NoCrossover : public Crossover<GeneType>
+	{
+	public:
+		using Gene = typename Crossover<GeneType>::Gene;
+		using Genotype = typename Crossover<GeneType>::Genotype;
+
+		void cross(Genotype& parentA, Genotype& parentB) override
+		{
+			
 		}
 	};
 

@@ -12,7 +12,7 @@
 
 #include <string>
 
-namespace GA {
+namespace ga {
     /**
 	 *	@brief	Class for reporting all kinds of errors
 	 *

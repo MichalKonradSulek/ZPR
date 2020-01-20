@@ -15,9 +15,9 @@
 #include <limits>
 #include <algorithm>
 
-#include "Selection.h"
+#include "selection.hpp"
 
-namespace GA {
+namespace ga {
 
 	/**
 	 *	@brief	Selection strategy that picks parents from a certain
@@ -68,7 +68,7 @@ namespace GA {
 	 *			 preasure over population and can lead to very quick
 	 *			 convergence of solutions
 	 *
-	 *	@note	This strategy is doesn't work with negative fitnesses
+	 *	@note	This strategy doesn't work with negative fitnesses
 	 */
 	template <typename SpecimenType>
 	class RouletteWheelSelection : public Selection<SpecimenType>
@@ -113,7 +113,8 @@ namespace GA {
 		inline double getFitness(const SpecimenType& specimen)
 		{
 			double fitness = specimen.getFitness();
-			return fitness < 0.0 ? 0.0 : fitness;
+			//return fitness < 0.0 ? 0.0 : fitness;
+			return fitness;
 		}
 
 		inline double getDouble() const
@@ -141,7 +142,7 @@ namespace GA {
 	 *			 quick convergence of solutions. This strategy has higher
 	 *			 chance to pick more fitting individuals than roulette wheel
 	 *
-	 *	@note	This strategy is doesn't work with negative fitnesses
+	 *	@note	This strategy doesn't work with negative fitnesses
 	 *	@note	This strategy is a modification of Roulette Wheel
 	 *
 	 *	@see	GA::RouletteWheelSelection
@@ -159,7 +160,7 @@ namespace GA {
 			Population mating_pool;
 			mating_pool.reserve(mating_pool_size);
 
-			generateWheel(population);
+			Base::generateWheel(population);
 
 			double step = Base::cumultative_fitness.back() / mating_pool_size;
 
@@ -172,7 +173,7 @@ namespace GA {
 					random_fitness = static_cast<int>(random_fitness) % static_cast<int>(Base::cumultative_fitness.back());
 
 				//	Find last occurence that is < random_fitness
-				int index = closest(Base::cumultative_fitness, random_fitness);
+				int index = Base::closest(Base::cumultative_fitness, random_fitness);
 				mating_pool.emplace_back(population[index]);
 			}
 

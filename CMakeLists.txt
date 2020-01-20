@@ -2,8 +2,16 @@ cmake_minimum_required(VERSION 2.8.2)
 project(ZPR)
 set(CMAKE_CXX_STANDARD 14)
 
-# EXAMPLE
-add_executable(example main.cpp)
+# EXAMPLES
+add_executable(MatchStringWithCoding MatchStringWithCoding/main.cpp)
+target_include_directories(MatchStringWithCoding PRIVATE MatchStringWithCoding .)
+
+add_executable(MatchStringWithPairsOfSpecimen MatchStringWithPairsOfSpecimen/main.cpp)
+target_include_directories(MatchStringWithPairsOfSpecimen PRIVATE MatchStringWithPairsOfSpecimen .)
+
+add_executable(TravelingSalesmanExample TravelingSalesmanExample/main.cpp)
+target_include_directories(TravelingSalesmanExample PRIVATE TravelingSalesmanExample .)
+
 
 # TESTS WITH INSTALLED GTEST
 find_package(GTest)

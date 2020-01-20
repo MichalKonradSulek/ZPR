@@ -14,7 +14,7 @@
 
 #include <vector>
 
-namespace GA {
+namespace ga {
 
 	/**
 	 *	@brief	Base class representing selection of most fitting individuals

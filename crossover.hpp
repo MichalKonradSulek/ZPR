@@ -17,7 +17,7 @@
 #include <cstdlib>
 #include <vector>
 
-namespace GA {
+namespace ga {
 
 	/**
 	 *	@brief Base class representing crossover of two individuals

@@ -17,7 +17,7 @@
 #include <vector>
 #include <iostream>
 
-namespace GA {
+namespace ga {
 
 	/**
 	 *	@brief Class defining single member of population
@@ -62,10 +62,10 @@ namespace GA {
 			std::cout << fitness_ << '\n';
 		}
 
-		inline Genotype& getGenotype() { return dna_; }
+		virtual Genotype& getGenotype() { return dna_; }
 
 		inline double	getFitness() const { return fitness_; }
-		inline void		setFitness(int fitness) { fitness_ = fitness; }
+		inline void		setFitness(double fitness) { fitness_ = fitness; }
 	};
 
 }

@@ -14,24 +14,24 @@
 #define __ENVIRONMENT__
 
 #include <vector>
-#include <iostream>
-#include <string>
 #include <algorithm>
 #include <memory>
 
-#include "Specimen.h"
+#include "specimen.hpp"
 
-#include "Mutation.h"
-#include "Crossover.h"
-#include "Selection.h"
+#include "mutation.hpp"
+#include "crossover.hpp"
+#include "selection.hpp"
 
-#include "Mutations.h"
-#include "Crossovers.h"
-#include "Selections.h"
+#include "Predefined/mutations.hpp"
+#include "Predefined/crossovers.hpp"
+#include "Predefined/selections.hpp"
 
-#include "Exception.h"
+#include "Predefined/ga_utility.hpp"
 
-namespace GA {
+#include "exception.hpp"
+
+namespace ga {
 
 	/**
 	 *	@brief	An environment defining population and specified genetic operators
@@ -122,17 +122,6 @@ namespace GA {
 		}
 
 	protected:
-		/**
-		 *	@brief	Generates new population and replaces currently held one
-		 */
-		virtual void generatePopulation(size_t population_size)
-		{
-			population_.clear();
-			population_.reserve(population_size);
-			for (size_type i = 0; i < population_size; ++i)
-				population_.emplace_back(SpecimenType());
-		}
-
 		template <typename FitnessFunction>
 		void evaluation(FitnessFunction fitness)
 		{
@@ -236,7 +225,7 @@ namespace GA {
 		 *	@param	show_best			 Calls print() on best individual of generation
 		 */
 		template <typename FitnessFunction, typename FinishCondition>
-		void runSimulation(FitnessFunction fitness, FinishCondition finishCondition, int number_of_iterations = -1, bool show_best = true) //TODO dodałbym bool ignoreFinishCondidtions = false
+		void runSimulation(FitnessFunction fitness, FinishCondition finishCondition, int number_of_iterations = -1, bool show_best = true)
 		{
 			if (population_.empty())
 				generatePopulation(population_.size());
@@ -245,20 +234,34 @@ namespace GA {
 
 			if (number_of_iterations == -1)
 			{
-				while (!finishCondition(population_, fitness))
+				while (!finishCondition(population_))
 					iteration(fitness, show_best);
 			}
 			else
 			{
-				while (!finishCondition(population_, fitness) && --number_of_iterations >= 0)
+				while (!finishCondition(population_) && --number_of_iterations >= 0)
 					iteration(fitness, show_best);
 			}
 		}
 
 		SpecimenType& getBest()
 		{
-			auto it = std::max_element(population_.begin(), population_.end(), [](const auto& a, const auto& b) {return a.getFitness() < b.getFitness(); });
+			SpecimenComp<SpecimenType> comp;
+
+			auto it = std::max_element(population_.begin(), population_.end(), comp);
 			return *it;
+		}
+
+		/**
+		 *	@brief	Generates new population and replaces currently held one
+		 */
+		virtual void generatePopulation(size_t population_size)
+		{
+			population_.clear();
+			population_.reserve(population_size);
+
+			for (size_type i = 0; i < population_size; ++i)
+				population_.emplace_back(SpecimenType());
 		}
 
 		//	Get/set population
@@ -277,12 +280,26 @@ namespace GA {
 			return population_;
 		}
 
-		//	For Mutations with strictly specified Gene type
+		//	For Strategies with strictly specified Gene/Specimen type
 		template <typename MutationType, typename... Args>
 		void setMutationType(Args&&... args)
 		{
 			mutation_type_.reset();
 			mutation_type_ = std::make_unique<MutationType>(std::forward<Args>(args)...);
+		}
+
+		template <typename CrossoverType, typename... Args>
+		void setCrossoverType(Args&&... args)
+		{
+			crossover_type_.reset();
+			crossover_type_ = std::make_unique<CrossoverType>(std::forward<Args>(args)...);
+		}
+
+		template <typename SelectionType, typename... Args>
+		void setSelectionType(Args&&... args)
+		{
+			selection_type_.reset();
+			selection_type_ = std::make_unique<SelectionType>(std::forward<Args>(args)...);
 		}
 
 		//	Generic function templates taking a specified strategy
