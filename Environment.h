@@ -120,18 +120,6 @@ namespace GA {
 		}
 
 	protected:
-		/**
-		 *	@brief	Generates new population and replaces currently held one
-		 */
-		virtual void generatePopulation(size_t population_size)
-		{
-			population_.clear();
-			population_.reserve(population_size);
-
-			for (size_type i = 0; i < population_size; ++i)
-				population_.emplace_back(SpecimenType());
-		}
-
 		template <typename FitnessFunction>
 		void evaluation(FitnessFunction fitness)
 		{
@@ -258,6 +246,18 @@ namespace GA {
 		{
 			auto it = std::max_element(population_.begin(), population_.end(), [](const auto& a, const auto& b) {return a.getFitness() < b.getFitness(); });
 			return *it;
+		}
+
+		/**
+		 *	@brief	Generates new population and replaces currently held one
+		 */
+		virtual void generatePopulation(size_t population_size)
+		{
+			population_.clear();
+			population_.reserve(population_size);
+
+			for (size_type i = 0; i < population_size; ++i)
+				population_.emplace_back(SpecimenType());
 		}
 
 		//	Get/set population

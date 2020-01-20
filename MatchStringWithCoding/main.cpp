@@ -79,7 +79,7 @@ int main() {
 		return result;
 	};
 
-	GA::Environment<MySpecimen>  env(10000);
+	GA::Environment<MySpecimen>  env(5000);
 
 	env.setMutationType<GA::FlipBitMutation>(GA::MUTATION_CHANCE_PERCENT * 0.05, 100, 5);
 	env.setCrossoverType<GA::SinglePointCrossover>();
