@@ -17,6 +17,4 @@
 
 #include "Exception.h"
 
-
-
 #endif // !__GA__
