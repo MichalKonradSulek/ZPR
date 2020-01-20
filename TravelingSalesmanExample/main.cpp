@@ -11,7 +11,7 @@
 //	Max x and y
 const int DIMENSIONS = 100;
 
-constexpr int NUMBER_OF_CITIES = 10;
+constexpr int NUMBER_OF_CITIES = 50;
 
 class Specimen : public GA::Specimen<int, int>
 {
@@ -32,8 +32,8 @@ public:
 	
 	void print() const
 	{
-		for (const auto& gene : dna_)
-			std::cout << gene << ' ';
+		//for (const auto& gene : dna_)
+		//	std::cout << gene << ' ';
 
 		std::cout << getFitness() << '\n';
 	}
@@ -48,10 +48,11 @@ int main() {
 		cities[i] = std::make_pair(i, i);
 		//cities[i] = std::make_pair(rand() % DIMENSIONS, rand() % DIMENSIONS);
 
-	GA::Environment<Specimen> env(1000);
+	GA::Environment<Specimen> env(10000);
 
-	env.setMutationType<GA::SwapGeneMutation>(-1, GA::MUTATION_CHANCE_PERCENT * 50, 1);
+	env.setMutationType<GA::SwapGeneMutation>(-1, GA::MUTATION_CHANCE_PERCENT * 0.1, 1);
 	env.setCrossoverType<GA::NoCrossover>();
+	env.setSelectionType<GA::StochasticUniversalSamplingSelection>();
 
 	auto fitness = [&cities](const Specimen& specimen) -> double
 	{
@@ -75,10 +76,17 @@ int main() {
 
 	auto finishCondition = [](const auto& population, auto fitness)
 	{
-		return false;
+		return false;	//	No finish condition
 	};
 
-	env.runSimulation(fitness, finishCondition, 100, true);
+	env.runSimulation(fitness, finishCondition, 1000, true);
+
+	auto best = env.getBest();
+
+	for (const auto& city : best.getFenotype())
+		std::cout << city << ' ';
+
+	std::cout << '\n';
 
 	return 0;
 }

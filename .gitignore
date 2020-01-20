@@ -61,3 +61,7 @@ Debug/TravelingSalesmanExample.pdb
 TravelingSalesmanExample/Debug/vc141.idb
 TravelingSalesmanExample/Debug/vc141.pdb
 TravelingSalesmanExample/TravelingSalesmanExample.vcxproj.user
+Release/TravelingSalesmanExample.iobj
+Release/TravelingSalesmanExample.ipdb
+Release/TravelingSalesmanExample.pdb
+TravelingSalesmanExample/Release/vc141.pdb

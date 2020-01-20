@@ -160,7 +160,7 @@ namespace GA {
 			Population mating_pool;
 			mating_pool.reserve(mating_pool_size);
 
-			generateWheel(population);
+			Base::generateWheel(population);
 
 			double step = Base::cumultative_fitness.back() / mating_pool_size;
 
@@ -173,7 +173,7 @@ namespace GA {
 					random_fitness = static_cast<int>(random_fitness) % static_cast<int>(Base::cumultative_fitness.back());
 
 				//	Find last occurence that is < random_fitness
-				int index = closest(Base::cumultative_fitness, random_fitness);
+				int index = Base::closest(Base::cumultative_fitness, random_fitness);
 				mating_pool.emplace_back(population[index]);
 			}
 
