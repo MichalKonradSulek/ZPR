@@ -1,4 +1,4 @@
-#include "Include.hpp"
+#include "include.hpp"
 
 int main() {
 	srand(time(nullptr));

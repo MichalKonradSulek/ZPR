@@ -17,19 +17,19 @@
 #include <algorithm>
 #include <memory>
 
-#include "Specimen.h"
+#include "specimen.hpp"
 
-#include "Mutation.h"
-#include "Crossover.h"
-#include "Selection.h"
+#include "mutation.hpp"
+#include "crossover.hpp"
+#include "selection.hpp"
 
-#include "Predefined/Mutations.h"
-#include "Predefined/Crossovers.h"
-#include "Predefined/Selections.h"
+#include "Predefined/mutations.hpp"
+#include "Predefined/crossovers.hpp"
+#include "Predefined/selections.hpp"
 
-#include "Predefined/GAUtility.h"
+#include "Predefined/ga_utility.hpp"
 
-#include "Exception.h"
+#include "exception.hpp"
 
 namespace GA {
 
@@ -225,7 +225,7 @@ namespace GA {
 		 *	@param	show_best			 Calls print() on best individual of generation
 		 */
 		template <typename FitnessFunction, typename FinishCondition>
-		void runSimulation(FitnessFunction fitness, FinishCondition finishCondition, int number_of_iterations = -1, bool show_best = true) //TODO dodałbym bool ignoreFinishCondidtions = false
+		void runSimulation(FitnessFunction fitness, FinishCondition finishCondition, int number_of_iterations = -1, bool show_best = true)
 		{
 			if (population_.empty())
 				generatePopulation(population_.size());

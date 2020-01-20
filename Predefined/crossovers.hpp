@@ -14,7 +14,7 @@
 #include <cstdlib>
 #include <algorithm>
 
-#include "Crossover.h"
+#include "crossover.hpp"
 
 namespace GA {
 

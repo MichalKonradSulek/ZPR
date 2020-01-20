@@ -1,4 +1,4 @@
-#include "../GA.h"
+#include "../ga.hpp"
 
 #include <iostream>
 #include <ctime>

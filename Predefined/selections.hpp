@@ -15,7 +15,7 @@
 #include <limits>
 #include <algorithm>
 
-#include "Selection.h"
+#include "selection.hpp"
 
 namespace GA {
 

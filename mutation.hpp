@@ -16,7 +16,7 @@
 #include <cstdlib>
 #include <vector>
 
-#include "Exception.h"
+#include "exception.hpp"
 
 namespace GA {
 

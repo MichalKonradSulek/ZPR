@@ -1,7 +1,7 @@
 #ifndef __INCLUDE__
 #define __INCLUDE__
 
-#include "../GA.h"
+#include "../ga.hpp"
 
 #include <iostream>
 #include <cstdlib>

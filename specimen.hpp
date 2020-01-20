@@ -62,7 +62,7 @@ namespace GA {
 			std::cout << fitness_ << '\n';
 		}
 
-		inline Genotype& getGenotype() { return dna_; }
+		virtual Genotype& getGenotype() { return dna_; }
 
 		inline double	getFitness() const { return fitness_; }
 		inline void		setFitness(double fitness) { fitness_ = fitness; }
