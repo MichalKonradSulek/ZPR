@@ -7,13 +7,13 @@
 #include "Crossover.h"
 #include "Selection.h"
 
-#include "Mutations.h"
-#include "Crossovers.h"
-#include "Selections.h"
+#include "Predefined/Mutations.h"
+#include "Predefined/Crossovers.h"
+#include "Predefined/Selections.h"
 
 #include "Environment.h"
 
-#include "GAUtility.h"
+#include "Predefined/GAUtility.h"
 
 #include "Exception.h"
 
