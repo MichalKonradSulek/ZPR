@@ -3,6 +3,7 @@
 int main() {
 	srand(time(nullptr));
 
+	//	Fitness for individual
 	auto fitness = [](const MySpecimen& specimen)
 	{
 		double result = 0;
@@ -17,23 +18,37 @@ int main() {
 		return result;
 	};
 
-	auto finishCondition = [](const auto& population)
+	//	Fitness for pair of individuals
+	auto fitnessPair = [&fitness](SpecimenPair& specimen)
 	{
-		ga::SpecimenComp<MySpecimen> comp;
+		double result = 0.0;
 
-		auto it = std::max_element(population.begin(), population.end(), comp);
-		auto fenotype = (*it).getFenotype();
+		specimen.getFirst().setFitness(fitness(specimen.getFirst()));
+		result += specimen.getFirst().getFitness();
 
-		return str == std::string(fenotype.begin(), fenotype.end());
+		specimen.getSecond().setFitness(fitness(specimen.getSecond()));
+		result += specimen.getSecond().getFitness();
+
+		return result;
 	};
 
-	ga::Environment<MySpecimen>  env(1000, new CharMutation(ga::MUTATION_CHANCE_PERCENT * 0.01, 10), new ga::UniformCrossover<char>(), new ga::RouletteWheelSelection<MySpecimen>());
+	auto finishCondition = [](const auto& population)
+	{
+		ga::SpecimenComp<SpecimenPair> comp;
 
-	env.runSimulation(fitness, finishCondition, -1, false);
+		auto it = std::max_element(population.begin(), population.end(), comp);
 
-	auto fenotype = env.getBest().getFenotype();
+		return (*it).getFitness() == str.length() * 10 * 2;	//	Length of string * fitness score * 2 individuals
+	};
 
-	std::cout << std::string(fenotype.begin(), fenotype.end()) << '\n';
+	MyEnvironment env(1000);
+
+	env.setMutationType<CharMutation>(ga::MUTATION_CHANCE_PERCENT * 0.01, 10);
+	env.setSelectionType<ga::RankSelection>();
+
+	env.runSimulation(fitnessPair, finishCondition, -1, false);
+
+	env.getBest().print();
 
 	return 0;
 }
