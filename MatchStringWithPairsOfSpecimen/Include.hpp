@@ -1,21 +1,22 @@
-#ifndef __TEST3__
-#define __TEST3__
+#ifndef __INCLUDE__
+#define __INCLUDE__
 
-#include "Specimen.h"
-#include "Mutation.h"
+#include "../GA.h"
 
-#include "Environment.h"
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
 
-std::string str3 = "Yet another string I'm trying to evolve!";
+std::string str = "This is another string that I'm trying to evolve!";
 
-class MySpecimen3 : public GA::Specimen<char, char>
+class MySpecimen : public GA::Specimen<char, char>
 {
 public:
-	MySpecimen3()
+	MySpecimen()
 	{
-		dna_.reserve(str3.length());
+		dna_.reserve(str.length());
 
-		for (size_t i = 0; i < str3.length(); ++i)
+		for (size_t i = 0; i < str.length(); ++i)
 			dna_.push_back(rand() % 96 + 32);
 	}
 
@@ -45,4 +46,5 @@ public:
 	}
 };
 
-#endif // !__TEST3__
+#endif // !__INCLUDE__
+

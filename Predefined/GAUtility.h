@@ -3,6 +3,13 @@
 
 namespace GA {
 
+	/**
+	 *	\brief	Compare struct for Specimens
+	 *
+	 *	\details Compares Specimens by their fitness
+	 *
+	 *	\tparam	SpecimenType	Type of Specimen to compare
+	 */
 	template <typename SpecimenType>
 	struct SpecimenComp
 	{
@@ -12,6 +19,14 @@ namespace GA {
 		}
 	};
 
+
+	/**
+	 *	\brief	Compare struct for Specimens
+	 *
+	 *	\details Compares Specimens by their fitness
+	 *
+	 *	\tparam	SpecimenType	Type of Specimen to compare
+	 */
 	template <typename SpecimenType>
 	struct SpecimenCompReverse
 	{
