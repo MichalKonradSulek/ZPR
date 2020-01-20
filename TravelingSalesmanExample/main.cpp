@@ -11,7 +11,7 @@
 //	Max x and y
 const int DIMENSIONS = 100;
 
-constexpr int NUMBER_OF_CITIES = 50;
+constexpr int NUMBER_OF_CITIES = 15;
 
 class Specimen : public GA::Specimen<int, int>
 {
@@ -48,9 +48,9 @@ int main() {
 		cities[i] = std::make_pair(i, i);
 		//cities[i] = std::make_pair(rand() % DIMENSIONS, rand() % DIMENSIONS);
 
-	GA::Environment<Specimen> env(10000);
+	GA::Environment<Specimen> env(500);
 
-	env.setMutationType<GA::SwapGeneMutation>(-1, GA::MUTATION_CHANCE_PERCENT * 0.1, 1);
+	env.setMutationType<GA::SwapGeneMutation>(-1, GA::MUTATION_CHANCE_PERCENT * 10, 5);
 	env.setCrossoverType<GA::NoCrossover>();
 	env.setSelectionType<GA::StochasticUniversalSamplingSelection>();
 
@@ -76,10 +76,29 @@ int main() {
 
 	auto finishCondition = [](const auto& population, auto fitness)
 	{
-		return false;	//	No finish condition
+		GA::SpecimenComp<Specimen> comp;
+
+		auto best = std::max_element(population.begin(), population.end(), comp);
+
+		auto best_fenotype = (*best).getFenotype();
+
+		int counter1 = 0, counter2 = 0;
+		for (int i = 0; i < NUMBER_OF_CITIES; ++i)
+		{
+			if (best_fenotype[i] == i)
+				++counter1;
+
+			if (best_fenotype[i] == NUMBER_OF_CITIES - 1 - i)
+				++counter2;
+		}
+
+		if (counter1 == NUMBER_OF_CITIES || counter2 == NUMBER_OF_CITIES)
+			return true;
+		else
+			return false;
 	};
 
-	env.runSimulation(fitness, finishCondition, 1000, true);
+	env.runSimulation(fitness, finishCondition, -1, false);
 
 	auto best = env.getBest();
 

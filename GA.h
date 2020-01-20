@@ -15,4 +15,17 @@
 
 #include "Exception.h"
 
+namespace GA {
+
+	template <typename SpecimenType>
+	struct SpecimenComp
+	{
+		bool operator ()(const SpecimenType& a, const SpecimenType& b)
+		{
+			return a.getFitness() < b.getFitness();
+		}
+	};
+
+}
+
 #endif // !__GA__
