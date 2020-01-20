@@ -11,7 +11,7 @@
 //	Max x and y
 const int DIMENSIONS = 100;
 
-constexpr int NUMBER_OF_CITIES = 15;
+constexpr int NUMBER_OF_CITIES = 35;
 
 class Specimen : public GA::Specimen<int, int>
 {
@@ -29,13 +29,14 @@ public:
 	{
 		return dna_;
 	}
-	
-	void print() const
-	{
-		//for (const auto& gene : dna_)
-		//	std::cout << gene << ' ';
+};
 
-		std::cout << getFitness() << '\n';
+class UniqueCrossover : public GA::Crossover<int>
+{
+public:
+	void cross(Genotype& parentA, Genotype& parentB) override
+	{
+
 	}
 };
 
@@ -45,7 +46,7 @@ int main() {
 	//	Define cities
 	std::array<std::pair<int, int>, NUMBER_OF_CITIES> cities;
 	for (size_t i = 0; i < NUMBER_OF_CITIES; ++i)
-		cities[i] = std::make_pair(i, i);
+		cities[i] = std::make_pair(i, i);	//	Generate predictable solution
 		//cities[i] = std::make_pair(rand() % DIMENSIONS, rand() % DIMENSIONS);
 
 	GA::Environment<Specimen> env(500);
@@ -74,7 +75,7 @@ int main() {
 		return 1000.0 / (dist + 1);
 	};
 
-	auto finishCondition = [](const auto& population, auto fitness)
+	auto finishCondition = [](const auto& population)
 	{
 		GA::SpecimenComp<Specimen> comp;
 

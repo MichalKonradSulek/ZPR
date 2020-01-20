@@ -244,12 +244,12 @@ namespace GA {
 
 			if (number_of_iterations == -1)
 			{
-				while (!finishCondition(population_, fitness))
+				while (!finishCondition(population_))
 					iteration(fitness, show_best);
 			}
 			else
 			{
-				while (!finishCondition(population_, fitness) && --number_of_iterations >= 0)
+				while (!finishCondition(population_) && --number_of_iterations >= 0)
 					iteration(fitness, show_best);
 			}
 		}
