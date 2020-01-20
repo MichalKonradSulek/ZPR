@@ -19,7 +19,7 @@ int main() {
 
 	auto finishCondition = [](const auto& population)
 	{
-		GA::SpecimenComp<MySpecimen> comp;
+		ga::SpecimenComp<MySpecimen> comp;
 
 		auto it = std::max_element(population.begin(), population.end(), comp);
 		auto fenotype = (*it).getFenotype();
@@ -27,7 +27,7 @@ int main() {
 		return str == std::string(fenotype.begin(), fenotype.end());
 	};
 
-	GA::Environment<MySpecimen>  env(1000, new CharMutation(GA::MUTATION_CHANCE_PERCENT * 0.01, 10), new GA::UniformCrossover<char>(), new GA::RouletteWheelSelection<MySpecimen>());
+	ga::Environment<MySpecimen>  env(1000, new CharMutation(ga::MUTATION_CHANCE_PERCENT * 0.01, 10), new ga::UniformCrossover<char>(), new ga::RouletteWheelSelection<MySpecimen>());
 
 	env.runSimulation(fitness, finishCondition, -1, false);
 

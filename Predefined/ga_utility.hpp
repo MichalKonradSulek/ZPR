@@ -1,7 +1,7 @@
 #ifndef __GA_UTILITY__
 #define __GA_UTILITY__
 
-namespace GA {
+namespace ga {
 
 	/**
 	 *	\brief	Compare struct for Specimens

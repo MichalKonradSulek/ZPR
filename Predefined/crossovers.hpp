@@ -16,7 +16,7 @@
 
 #include "crossover.hpp"
 
-namespace GA {
+namespace ga {
 
 	/**
 	 *	@brief	Crossover strategy with only one crossover point

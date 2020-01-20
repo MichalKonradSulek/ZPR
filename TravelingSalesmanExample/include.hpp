@@ -16,7 +16,7 @@ const int DIMENSIONS = 100;
 
 constexpr int NUMBER_OF_CITIES = 25;
 
-class Specimen : public GA::Specimen<int, int>
+class Specimen : public ga::Specimen<int, int>
 {
 public:
 	Specimen()
@@ -38,11 +38,11 @@ public:
 		for (const auto& city : dna_)
 			std::cout << city << ' ';
 
-		GA::Specimen<int, int>::print();
+		ga::Specimen<int, int>::print();
 	}
 };
 
-class UniqueCrossover : public GA::Crossover<int>
+class UniqueCrossover : public ga::Crossover<int>
 {
 public:
 	void cross(Genotype& parentA, Genotype& parentB) override

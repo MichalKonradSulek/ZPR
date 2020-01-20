@@ -31,7 +31,7 @@
 
 #include "exception.hpp"
 
-namespace GA {
+namespace ga {
 
 	/**
 	 *	@brief	An environment defining population and specified genetic operators

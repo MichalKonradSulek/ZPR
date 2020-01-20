@@ -9,7 +9,7 @@
 
 std::string str = "This is another string that I'm trying to evolve!";
 
-class MySpecimen : public GA::Specimen<char, char>
+class MySpecimen : public ga::Specimen<char, char>
 {
 public:
 	MySpecimen()
@@ -32,10 +32,10 @@ public:
 	}
 };
 
-class CharMutation : public GA::MultipleMutation<char>
+class CharMutation : public ga::MultipleMutation<char>
 {
 public:
-	CharMutation(int mutation_chance = GA::MUTATION_CHANCE_PERCENT, int max_mutations = 1) : MultipleMutation<char>(mutation_chance, 40, max_mutations) { }
+	CharMutation(int mutation_chance = ga::MUTATION_CHANCE_PERCENT, int max_mutations = 1) : MultipleMutation<char>(mutation_chance, 40, max_mutations) { }
 	~CharMutation() = default;
 
 	void performMutation(Genotype& genes) const override

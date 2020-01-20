@@ -17,7 +17,7 @@
 #include <vector>
 #include <iostream>
 
-namespace GA {
+namespace ga {
 
 	/**
 	 *	@brief Class defining single member of population

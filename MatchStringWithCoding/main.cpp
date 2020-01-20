@@ -5,7 +5,7 @@ int main() {
 
 	auto finishCondition = [](const auto& population)
 	{
-		GA::SpecimenComp<MySpecimen> comp;
+		ga::SpecimenComp<MySpecimen> comp;
 
 		auto it = std::max_element(population.begin(), population.end(), comp);
 		auto fenotype = (*it).getFenotype();
@@ -27,11 +27,11 @@ int main() {
 		return result;
 	};
 
-	GA::Environment<MySpecimen>  env(5000);
+	ga::Environment<MySpecimen>  env(5000);
 
-	env.setMutationType<GA::FlipBitMutation>(GA::MUTATION_CHANCE_PERCENT * 0.05, 100, 5);
-	env.setCrossoverType<GA::SinglePointCrossover>();
-	env.setSelectionType<GA::RankSelection>();
+	env.setMutationType<ga::FlipBitMutation>(ga::MUTATION_CHANCE_PERCENT * 0.05, 100, 5);
+	env.setCrossoverType<ga::SinglePointCrossover>();
+	env.setSelectionType<ga::RankSelection>();
 
 	env.runSimulation(fitness, finishCondition, -1, false);
 

@@ -17,7 +17,7 @@
 
 #include "selection.hpp"
 
-namespace GA {
+namespace ga {
 
 	/**
 	 *	@brief	Selection strategy that picks parents from a certain

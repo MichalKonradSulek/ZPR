@@ -18,7 +18,7 @@
 
 #include "exception.hpp"
 
-namespace GA {
+namespace ga {
 
 	const int MAX_MUTATION_CHANCE		= 100000;
 	const int MUTATION_CHANCE_PERCENT	= MAX_MUTATION_CHANCE / 100;

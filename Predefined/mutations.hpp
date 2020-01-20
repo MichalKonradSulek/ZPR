@@ -15,7 +15,7 @@
 #include <cstdlib>
 #include <algorithm>
 
-namespace GA {
+namespace ga {
 
 	/**
 	 *	@brief	Mutation strategy aimed specifically for boolean Gene type

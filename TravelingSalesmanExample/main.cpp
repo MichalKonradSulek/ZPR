@@ -9,11 +9,11 @@ int main() {
 		cities[i] = std::make_pair(i, i);	//	Generate predictable solution
 		//cities[i] = std::make_pair(rand() % DIMENSIONS, rand() % DIMENSIONS);
 
-	GA::Environment<Specimen> env(500);
+	ga::Environment<Specimen> env(500);
 
-	env.setMutationType<GA::SwapGeneMutation>(-1, GA::MUTATION_CHANCE_PERCENT * 10, 5);
+	env.setMutationType<ga::SwapGeneMutation>(-1, ga::MUTATION_CHANCE_PERCENT * 10, 5);
 	env.setCrossoverType<UniqueCrossover>();
-	env.setSelectionType<GA::StochasticUniversalSamplingSelection>();
+	env.setSelectionType<ga::StochasticUniversalSamplingSelection>();
 
 	auto fitness = [&cities](const Specimen& specimen) -> double
 	{
@@ -37,7 +37,7 @@ int main() {
 
 	auto finishCondition = [](const auto& population)
 	{
-		GA::SpecimenComp<Specimen> comp;
+		ga::SpecimenComp<Specimen> comp;
 
 		auto best = std::max_element(population.begin(), population.end(), comp);
 
