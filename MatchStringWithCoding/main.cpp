@@ -57,8 +57,11 @@ int main() {
 
 	auto finishCondition = [](const auto& population)
 	{
-		auto it = std::max_element(population.begin(), population.end(), [](const auto& a, const auto& b) {return a.getFitness() < b.getFitness(); });
+		GA::SpecimenComp<MySpecimen> comp;
+
+		auto it = std::max_element(population.begin(), population.end(), comp);
 		auto fenotype = (*it).getFenotype();
+
 		return str1 == std::string(fenotype.begin(), fenotype.end());
 	};
 

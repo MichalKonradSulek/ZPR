@@ -15,7 +15,7 @@ int main()
 
 	auto finishCondition1 = [](const auto& population, auto fitness)
 	{
-		auto it = std::max_element(population.begin(), population.end(), [](const auto& a, const auto& b) {return a.getFitness() < b.getFitness(); });
+		auto it = std::max_element(population.begin(), population.end(), GA::SpecimenComp);
 		auto fenotype = (*it).getFenotype();
 		return str1 == std::string(fenotype.begin(), fenotype.end());
 	};
@@ -58,7 +58,7 @@ int main()
 
 	auto finishCondition3 = [](const auto& population, auto fitness)
 	{
-		auto it = std::max_element(population.begin(), population.end(), [](const auto& a, const auto& b) {return a.getFitness() < b.getFitness(); });
+		auto it = std::max_element(population.begin(), population.end(), GA::SpecimenComp);
 		auto fenotype = (*it).getFenotype();
 		return str3 == std::string(fenotype.begin(), fenotype.end());
 	};
