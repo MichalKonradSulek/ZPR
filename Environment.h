@@ -276,12 +276,26 @@ namespace GA {
 			return population_;
 		}
 
-		//	For Mutations with strictly specified Gene type
+		//	For Strategies with strictly specified Gene/Specimen type
 		template <typename MutationType, typename... Args>
 		void setMutationType(Args&&... args)
 		{
 			mutation_type_.reset();
 			mutation_type_ = std::make_unique<MutationType>(std::forward<Args>(args)...);
+		}
+
+		template <typename CrossoverType, typename... Args>
+		void setCrossoverType(Args&&... args)
+		{
+			crossover_type_.reset();
+			crossover_type_ = std::make_unique<CrossoverType>(std::forward<Args>(args)...);
+		}
+
+		template <typename SelectionType, typename... Args>
+		void setSelectionType(Args&&... args)
+		{
+			selection_type_.reset();
+			selection_type_ = std::make_unique<SelectionType>(std::forward<Args>(args)...);
 		}
 
 		//	Generic function templates taking a specified strategy
