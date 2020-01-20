@@ -14,8 +14,6 @@
 #define __ENVIRONMENT__
 
 #include <vector>
-#include <iostream>
-#include <string>
 #include <algorithm>
 #include <memory>
 
@@ -129,6 +127,7 @@ namespace GA {
 		{
 			population_.clear();
 			population_.reserve(population_size);
+
 			for (size_type i = 0; i < population_size; ++i)
 				population_.emplace_back(SpecimenType());
 		}

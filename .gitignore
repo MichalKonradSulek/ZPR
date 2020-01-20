@@ -56,3 +56,8 @@ lib/Debug/gtest_maind.lib
 lib/Debug/gtestd.lib
 test.dir/Debug/vc141.pdb
 test.vcxproj.user
+Debug/TravelingSalesmanExample.ilk
+Debug/TravelingSalesmanExample.pdb
+TravelingSalesmanExample/Debug/vc141.idb
+TravelingSalesmanExample/Debug/vc141.pdb
+TravelingSalesmanExample/TravelingSalesmanExample.vcxproj.user

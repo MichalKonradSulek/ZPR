@@ -96,6 +96,19 @@ namespace GA {
 		}
 	};
 
+	template <typename GeneType>
+	class NoCrossover : public Crossover<GeneType>
+	{
+	public:
+		using Gene = typename Crossover<GeneType>::Gene;
+		using Genotype = typename Crossover<GeneType>::Genotype;
+
+		void cross(Genotype& parentA, Genotype& parentB) override
+		{
+			
+		}
+	};
+
 }
 
 #endif // !__CROSSOVERS__

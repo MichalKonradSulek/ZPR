@@ -113,7 +113,8 @@ namespace GA {
 		inline double getFitness(const SpecimenType& specimen)
 		{
 			double fitness = specimen.getFitness();
-			return fitness < 0.0 ? 0.0 : fitness;
+			//return fitness < 0.0 ? 0.0 : fitness;
+			return fitness;
 		}
 
 		inline double getDouble() const
